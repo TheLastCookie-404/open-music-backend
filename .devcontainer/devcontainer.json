@@ -1,27 +1,62 @@
 // https://aka.ms/devcontainer.json
+// {
+// 	"name": "Existing Docker Compose (Extend)",
+// 	"dockerComposeFile": [
+// 		"../compose.yaml"
+// 	],
+// 	"service": "laravel.test",
+// 	"workspaceFolder": "/var/www/html",
+// 	"customizations": {
+// 		"vscode": {
+// 			"extensions": [
+// 				"laravel.vscode-laravel",
+// 				"mikestead.dotenv",
+// 				"amiralizadeh9480.laravel-extra-intellisense",
+// 				"ryannaddy.laravel-artisan",
+// 				"onecentlin.laravel5-snippets",
+// 				"onecentlin.laravel-blade"
+// 			],
+// 			"settings": {}
+// 		}
+// 	},
+// 	"remoteUser": "sail",
+// 	"postCreateCommand": "chown -R 1000:1000 /var/www/html 2>/dev/null || true"
+// 	// "forwardPorts": [],
+// 	// "runServices": [],
+// 	// "shutdownAction": "none",
+// }
+
 {
-	"name": "Existing Docker Compose (Extend)",
-	"dockerComposeFile": [
-		"../compose.yaml"
-	],
-	"service": "laravel.test",
-	"workspaceFolder": "/var/www/html",
-	"customizations": {
-		"vscode": {
-			"extensions": [
-				"laravel.vscode-laravel",
-				"mikestead.dotenv",
-				"amiralizadeh9480.laravel-extra-intellisense",
-				"ryannaddy.laravel-artisan",
-				"onecentlin.laravel5-snippets",
-				"onecentlin.laravel-blade"
-			],
-			"settings": {}
-		}
-	},
-	"remoteUser": "sail",
-	"postCreateCommand": "chown -R 1000:1000 /var/www/html 2>/dev/null || true"
-	// "forwardPorts": [],
-	// "runServices": [],
-	// "shutdownAction": "none",
+  "name": "PHP",
+  // Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
+  "image": "mcr.microsoft.com/devcontainers/php:1-8.3-bookworm",
+  // Features to add to the dev container. More info: https://containers.dev/features.
+  // "features": {},
+  // Configure tool-specific properties.
+  // "customizations": {},
+  // Use 'forwardPorts' to make a list of ports inside the container available locally.
+  "forwardPorts": [8000, 5173],
+  "features": {
+    "ghcr.io/itsmechlark/features/postgresql:1": {},
+    "ghcr.io/devcontainers-extra/features/composer:1": {},
+    "ghcr.io/devcontainers/features/node:1": {},
+    "ghcr.io/opencodeco/devcontainers/install-php-extensions:0": {
+      "extensions": ["pdo_pgsql"]
+    }
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "docker.docker",
+        "formulahendry.auto-rename-tag",
+        "bradgashler.htmltagwrap",
+        "cweijan.vscode-postgresql-client2"
+      ]
+    }
+  }
+  // Use 'postCreateCommand' to run commands after the container is created.
+  // "postCreateCommand": "sudo chmod a+x \"$(pwd)\" && sudo rm -rf /var/www/html && sudo ln -s \"$(pwd)\" /var/www/html"
+
+  // Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
+  // "remoteUser": "root"
 }
