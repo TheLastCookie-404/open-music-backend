@@ -20,7 +20,7 @@
 </head>
 
 <body>
-  <div class="fixed size-full grid place-items-center text-2xl">Nothing here yet! </div>
+  <div class="fixed size-full grid place-items-center text-2xl">Nothing here yet!</div>
 </body>
 
 </html>
