@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 class LoginController extends AuthController
 {
     // Login user and return JWT token
-    public function login(Request $request)
+    public function index(Request $request)
     {
         $credentials = $request->only('email', 'password');
 

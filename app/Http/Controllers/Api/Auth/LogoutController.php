@@ -7,7 +7,7 @@ use App\Http\Controllers\Api\AuthController;
 class LogoutController extends AuthController
 {
     // Logout user (invalidate token)
-    public function logout()
+    public function index()
     {
         /** @disregard P1013 Undefined method (for logout()) */
         auth('api')->logout();

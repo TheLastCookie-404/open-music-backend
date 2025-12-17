@@ -7,7 +7,7 @@ use App\Http\Controllers\Api\AuthController;
 class ProfileController extends AuthController
 {
     // Get user profile
-    public function profile()
+    public function show()
     {
         return response()->json(auth('api')->user());
     }
