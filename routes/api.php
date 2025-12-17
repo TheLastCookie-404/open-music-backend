@@ -1,13 +1,20 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\Auth\ 
+{
+    RegisterController,
+    LoginController,
+    RefreshController,
+    ProfileController,
+    LogoutController    
+};
 
-Route::post('register', [AuthController::class, 'register']);
-Route::post('login', [AuthController::class, 'login']);
-Route::post('refresh', [AuthController::class, 'refresh']);
+Route::post('register', [RegisterController::class, 'register']);
+Route::post('login', [LoginController::class, 'login']);
+Route::post('refresh', [RefreshController::class, 'refresh']);
 
 Route::middleware('auth:api')->group(function () {
-    Route::get('profile', [AuthController::class, 'profile']);
-    Route::post('logout', [AuthController::class, 'logout']);
+    Route::get('profile', [ProfileController::class, 'profile']);
+    Route::post('logout', [LogoutController::class, 'logout']);
 });
