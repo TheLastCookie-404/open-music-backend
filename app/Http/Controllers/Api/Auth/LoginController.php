@@ -10,6 +10,11 @@ class LoginController extends AuthController
     // Login user and return JWT token
     public function index(Request $request)
     {
+        $request->validate([
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:6',
+        ]);
+
         $credentials = $request->only('email', 'password');
 
         /** @disregard P1013 Undefined method (for attempt()) */
