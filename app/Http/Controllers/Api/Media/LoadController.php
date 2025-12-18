@@ -4,20 +4,19 @@ namespace App\Http\Controllers\Api\Media;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 
 class LoadController extends Controller
 {
     public function store(Request $request) 
     {
         $request->validate([
-            'audio' => 'required',
+            'audio' => 'required|mimes:audio/mpeg,mpga,mp3,wav,aac',
         ]);
 
-        Log::info(json_encode($request->get('audio')));
+        $request->file('audio')->store('uploads', 'public');
 
         return response()->json([
-            $request->get('audio')
+            "Message" => "uploaded"
         ], 200);
     }
 }
