@@ -22,6 +22,11 @@ class LoginController extends AuthController
             return response()->json(['error' => 'Unauthorized'], 401);
         }
 
-        return $this->respondWithToken($token);
+        // return $this->respondWithToken($token);
+        return $this->respondWithToken($token)
+            ->cookie(
+                'token', $token, 60 * 24, // Expires in 1 day
+                '/', null, true, true, false, 'Strict' // path, domain, secure, httpOnly, raw, sameSite
+            );
     }
 }

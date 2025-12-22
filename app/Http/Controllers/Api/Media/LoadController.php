@@ -16,7 +16,7 @@ class LoadController extends Controller
         $request->file('audio')->store('uploads', 'public');
 
         return response()->json([
-            "Message" => "uploaded"
+            "message" => "uploaded"
         ], 200);
     }
 }

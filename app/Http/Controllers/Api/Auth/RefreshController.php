@@ -10,6 +10,14 @@ class RefreshController extends AuthController
     public function index()
     {
         /** @disregard P1013 Undefined method (for refresh()) */
-        return $this->respondWithToken(auth('api')->refresh());
+        if (!$token = auth('api')->refresh()) {
+            return response()->json(['error' => 'Invalid refresh token'], 401);
+        }
+
+        return $this->respondWithToken($token)
+            ->cookie(
+                'token', $token, 60 * 24, // Expires in 1 day
+                '/', null, true, true, false, 'Strict' // path, domain, secure, httpOnly, raw, sameSite
+            );
     }
 }
