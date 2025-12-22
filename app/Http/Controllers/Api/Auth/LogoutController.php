@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Auth;
 
 use App\Http\Controllers\Api\AuthController;
+use PHPOpenSourceSaver\JWTAuth\JWTAuth;
 
 class LogoutController extends AuthController
 {

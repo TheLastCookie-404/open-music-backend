@@ -5,7 +5,8 @@ namespace App\Http\Controllers\Api\Media;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Log;
+use Owenoj\LaravelGetId3\GetId3;
+use Illuminate\Support\Str;
 
 class LoadController extends Controller
 {
@@ -18,9 +19,15 @@ class LoadController extends Controller
         $fileName = $request->file('audio')->getClientOriginalName();
         $file = $request->file('audio');
 
-        Storage::disk('public')->putFileAs("audiofile", $file, $fileName);
+        $id =  mt_rand(0, 9999) . time();
 
-        Log::info(exif_read_data("storage/audiofile/$fileName"));
+        Storage::disk('public')->putFileAs("audiofile/$id", $file, $fileName);
+
+        $track = GetId3::fromUploadedFile($file);
+
+        if($artwork = $track->getArtwork(true)) {
+            Storage::disk('public')->putFileAs("audiofile/$id", $artwork, "artwork.jpg");
+        }
 
         return response()->json([
             "message" => "uploaded"
