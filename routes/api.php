@@ -8,7 +8,7 @@ use App\Http\Controllers\Api\Auth\
     LoginController,
     RefreshController,
     ProfileController,
-    LogoutController    
+    LogoutController
 };
 
 Route::middleware('auth:api')->group(function () {
@@ -20,4 +20,4 @@ Route::post('register', [RegisterController::class, 'index']);
 Route::post('login', [LoginController::class, 'index']);
 Route::post('refresh', [RefreshController::class, 'index']);
 
-Route::post('load', [LoadController::class, 'store']);
+Route::post('upload', [LoadController::class, 'store']);
