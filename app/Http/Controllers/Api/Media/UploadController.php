@@ -1,0 +1,69 @@
+<?php
+
+namespace App\Http\Controllers\Api\Media;
+
+use App\Http\Controllers\Controller;
+use App\Models\Media;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
+use Owenoj\LaravelGetId3\GetId3;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+
+class UploadController extends Controller
+{
+    public function store(Request $request) 
+    {
+        $request->validate([
+            'audio' => 'required|mimes:audio/mpeg,mpga,mp3,wav,aac',
+        ]);
+
+        $fileName = $request->file('audio')->getClientOriginalName();
+        $file = $request->file('audio');
+        $id =  mt_rand(0, 9999) . time();
+        $metadata = GetId3::fromUploadedFile($file);
+
+        $fileUrls = $this->upload($id, $file, $fileName, $metadata->getArtwork(true));
+
+        $this->storeInDB($id, $metadata, $fileUrls);
+
+        return response()->json([
+            "message" => "uploaded"
+        ], 200);
+    }
+
+
+
+    private function upload(string $id, UploadedFile $file, string $fileName, mixed $artwork)
+    {
+        $rootUrl = url("/storage/audiofile/$id");
+        $audioUrl = "$rootUrl/$fileName";
+        $artworkUrl = null;
+
+        Storage::disk('public')->putFileAs("audiofile/$id", $file, $fileName);
+
+        if($artwork !== null) {
+            Storage::disk('public')->putFileAs("audiofile/$id", $artwork, "artwork.jpg");
+            $artworkUrl = "$rootUrl/artwork.jpg";
+        }
+
+        return [
+            'artwork_url' => $artworkUrl,
+            'audio_url' => $audioUrl
+        ];
+    }
+
+    private function storeInDB(string $uId, GetId3 $metadata, array $fileUrls)
+    {
+        Media::create([
+            'uid' => $uId,
+            'title' => $metadata->getTitle(),
+            'artist' => $metadata->getArtist(),
+            'playtime' => $metadata->getPlaytime(),
+            'playtime_seconds' => $metadata->getPlaytimeSeconds(),
+            'artwork_url' => $fileUrls['artwork_url'],
+            'audio_url' => $fileUrls['audio_url'],
+            'audio_download_url' => null,
+        ]);
+    }
+} 

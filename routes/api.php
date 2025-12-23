@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\Media\LoadController;
+use App\Http\Controllers\Api\Media\UploadController;
 use App\Http\Controllers\Api\Auth\ 
 {
     RegisterController,
@@ -14,7 +14,7 @@ use App\Http\Controllers\Api\Auth\
 Route::middleware('auth:api')->group(function () {
     Route::get('profile', [ProfileController::class, 'show']);
     Route::post('logout', [LogoutController::class, 'index']);
-    Route::post('upload', [LoadController::class, 'store']);
+    Route::post('upload', [UploadController::class, 'store']);
 });
 
 Route::post('register', [RegisterController::class, 'index']);
