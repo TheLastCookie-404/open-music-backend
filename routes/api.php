@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\Media\
 {
     UploadController,
-    GetController
+    TrackController
 };
 use App\Http\Controllers\Api\Auth\ 
 {
@@ -21,7 +21,7 @@ Route::middleware('auth:api')->group(function () {
     Route::post('upload', [UploadController::class, 'store']);
 });
 
-Route::get('test', [GetController::class, 'show']);
+Route::get('tracks', [TrackController::class, 'show']);
 Route::post('register', [RegisterController::class, 'index']);
 Route::post('login', [LoginController::class, 'index']);
 Route::post('refresh', [RefreshController::class, 'index']);
