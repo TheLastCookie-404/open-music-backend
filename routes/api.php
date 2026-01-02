@@ -1,7 +1,11 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\Media\UploadController;
+use App\Http\Controllers\Api\Media\
+{
+    UploadController,
+    GetController
+};
 use App\Http\Controllers\Api\Auth\ 
 {
     RegisterController,
@@ -17,6 +21,7 @@ Route::middleware('auth:api')->group(function () {
     Route::post('upload', [UploadController::class, 'store']);
 });
 
+Route::get('test', [GetController::class, 'show']);
 Route::post('register', [RegisterController::class, 'index']);
 Route::post('login', [LoginController::class, 'index']);
 Route::post('refresh', [RefreshController::class, 'index']);

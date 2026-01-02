@@ -12,7 +12,7 @@ class GetController extends Controller
      */
     public function show(Media $media) {
         return response()->json([
-            "message" => "test"
+            "message" => $media->all()
         ]);
     }
 }

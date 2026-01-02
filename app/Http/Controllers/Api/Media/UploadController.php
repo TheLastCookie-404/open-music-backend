@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Owenoj\LaravelGetId3\GetId3;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Illuminate\Support\Str;
 
 class UploadController extends Controller
 {
@@ -37,8 +38,12 @@ class UploadController extends Controller
     private function upload(string $id, UploadedFile $file, string $fileName, mixed $artwork)
     {
         $rootUrl = url("/storage/audiofile/$id");
-        $audioUrl = "$rootUrl/$fileName";
+        $fileName = $fileName;
+        $fileNameEncoded = rawurlencode($fileName);
+        $audioUrl = "$rootUrl/$fileNameEncoded";
         $artworkUrl = null;
+
+        Log::info($audioUrl);
 
         Storage::disk('public')->putFileAs("audiofile/$id", $file, $fileName);
 
