@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Auth;
 
 use App\Http\Controllers\Api\AuthController;
+use PHPOpenSourceSaver\JWTAuth\Exceptions\JWTException;
 
 class RefreshController extends AuthController
 {
@@ -10,8 +11,13 @@ class RefreshController extends AuthController
     public function index()
     {
         /** @disregard P1013 Undefined method (for refresh()) */
-        if (!$token = auth('api')->refresh()) {
-            return response()->json(['error' => 'Invalid refresh token'], 401);
+        try {
+            $token = auth('api')->refresh();
+        }
+        catch (JWTException $e) {
+            return response()->json([
+                'error' => $e->getMessage(),
+            ], 401);
         }
 
         return $this->respondWithToken($token)
