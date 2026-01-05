@@ -21,7 +21,7 @@ class UploadController extends Controller
 
         $fileName = $request->file('audio')->getClientOriginalName();
         $file = $request->file('audio');
-        $id =  mt_rand(0, 9999) . time();
+        $id =  str()->random(4) . time();
         $metadata = GetId3::fromUploadedFile($file);
 
         $fileUrls = $this->upload($id, $file, $fileName, $metadata->getArtwork(true));
