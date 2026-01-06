@@ -19,6 +19,6 @@ Route::get('/', function () {
         'documentation' => 'https://',
         'author' => 'TheLastCookie-404',
         'github' => 'https://github.com/TheLastCookie-404',
-        'message' => 'Press autoformat to get normalized urls!'
+        'message' => 'press autoformat to get normalized urls!'
     ], 200, [], JSON_PRETTY_PRINT);
 });
