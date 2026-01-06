@@ -15,6 +15,7 @@ Route::get('/', function () {
         'name' => 'open-music-api',
         'version' => '1.0',
         'api-root-url' => url('/api'),
+        'tracks' => url('/api/tracks'),
         'documentation' => 'https://',
         'author' => 'TheLastCookie-404',
         'github' => 'https://github.com/TheLastCookie-404',
