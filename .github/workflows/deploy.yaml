@@ -16,11 +16,11 @@ jobs:
         run: sudo apt-get install -y sshpass
 
       - name: ssh connect
-        run: sshpass -p ${{ secrets.SSH_PASSWORD }} ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}
+        run: sshpass -p ${{ secrets.SSH_PASSWORD }} ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} git pull origin main
         # shell: bash
 
-      - name: change dir
-        run: cd ~/open-music.the-last-cookie.site
+      # - name: change dir
+      #   run: cd ~/open-music.the-last-cookie.site
 
-      - name: pull
-        run: git pull origin main
+      # - name: pull
+      #   run: git pull origin main
