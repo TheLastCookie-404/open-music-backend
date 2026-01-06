@@ -10,8 +10,8 @@ class RefreshController extends AuthController
     // Refresh JWT token
     public function index()
     {
-        /** @disregard P1013 Undefined method (for refresh()) */
         try {
+            /** @disregard P1013 Undefined method (for refresh()) */
             $token = auth('api')->refresh();
         }
         catch (JWTException $e) {
@@ -23,7 +23,7 @@ class RefreshController extends AuthController
         return $this->respondWithToken($token)
             ->cookie(
                 'token', $token, 60 * 24, // Expires in 1 day
-                '/', null, true, true, false, 'Strict' // path, domain, secure, httpOnly, raw, sameSite
+                '/', null, true, true, false // path, domain, secure, httpOnly, raw, sameSite
             );
     }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Auth;
 
 use App\Http\Controllers\Api\AuthController;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class LoginController extends AuthController
 {
@@ -17,6 +18,8 @@ class LoginController extends AuthController
 
         $credentials = $request->only('email', 'password');
 
+        Log::info();
+
         /** @disregard P1013 Undefined method (for attempt()) */
         if (!$token = auth('api')->attempt($credentials)) {
             return response()->json(['error' => 'Unauthorized'], 401);
@@ -26,7 +29,7 @@ class LoginController extends AuthController
         return $this->respondWithToken($token)
             ->cookie(
                 'token', $token, 60 * 24, // Expires in 1 day
-                '/', null, true, true, false, 'Strict' // path, domain, secure, httpOnly, raw, sameSite
+                '/', null, true, true, false // path, domain, secure, httpOnly, raw, sameSite
             );
     }
 }
