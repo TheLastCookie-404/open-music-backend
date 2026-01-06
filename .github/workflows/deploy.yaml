@@ -16,7 +16,7 @@ jobs:
         run: sudo apt-get install -y sshpass
 
       - name: ssh connect
-        run: sshpass "${{ secrets.SSH_PASSWORD }}" ssh -T ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}
+        run: sshpass "${{ secrets.SSH_PASSWORD }}" ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}
 
       - name: pull
         run: git pull origin main
