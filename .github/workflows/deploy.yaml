@@ -17,8 +17,7 @@ jobs:
 
       - name: ssh connect
         run: sshpass -p ${{ secrets.SSH_PASSWORD }} ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}
-        shell: bash
-        # run: sshpass -p ${{ secrets.SSH_PASSWORD }} ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}
+        # shell: bash
 
       - name: pull
         run: git pull origin main
