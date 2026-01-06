@@ -1,0 +1,22 @@
+name: deploy
+
+on:
+  push:
+    branches: ["main"]
+
+jobs:
+  deploy:
+    name: deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install sshpass
+        run: sudo apt-get install -y sshpass
+
+      - name: ssh connect
+        run: sshpass -p "${{ secrets.SSH_PASSWORD }}" ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} echo
+
+      - name: pull
+        run: git pull origin main
