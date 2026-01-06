@@ -19,5 +19,8 @@ jobs:
         run: sshpass -p ${{ secrets.SSH_PASSWORD }} ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}
         # shell: bash
 
+      - name: change dir
+        run: cd ~/open-music.the-last-cookie.site
+
       - name: pull
         run: git pull origin main
