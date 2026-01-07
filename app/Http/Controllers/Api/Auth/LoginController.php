@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Auth;
 
 use App\Http\Controllers\Api\AuthController;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class LoginController extends AuthController
 {
@@ -14,7 +15,7 @@ class LoginController extends AuthController
             'email' => 'required|string|email|max:255',
             'password' => 'required|string|min:6',
         ]);
-
+        
         $credentials = $request->only('email', 'password');
 
         /** @disregard P1013 Undefined method (for attempt()) */
@@ -25,7 +26,7 @@ class LoginController extends AuthController
         // return $this->respondWithToken($token);
         return $this->respondWithToken($token)
             ->cookie(
-                'token', $token, 60 * 24, // Expires in 1 day
+                'token', $token, config('jwt.refresh_ttl'), // Expires in 1 day
                 '/', null, true, true, false // path, domain, secure, httpOnly, raw, sameSite
             );
     }
