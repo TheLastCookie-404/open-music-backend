@@ -16,7 +16,7 @@ class DeleteController extends Controller
     public function destroy(Request $request, Media $media)
     {
         $request->validate([
-            'uid' => 'string|max:32'
+            'uid' => 'required|string|max:32|alpha_num'
         ]);
 
         $uid = $request->get('uid');
