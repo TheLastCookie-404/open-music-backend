@@ -34,21 +34,19 @@ class UploadController extends Controller
     }
 
 
-
     private function upload(string $id, UploadedFile $file, string $fileName, mixed $artwork)
     {
-        $rootUrl = url("/storage/audiofile/$id");
-        $fileName = $fileName;
+        $rootUrl = url("storage/media/$id");
         $fileNameEncoded = rawurlencode($fileName);
         $audioUrl = "$rootUrl/$fileNameEncoded";
         $artworkUrl = null;
 
         Log::info($audioUrl);
 
-        Storage::disk('public')->putFileAs("audiofile/$id", $file, $fileName);
+        Storage::disk('media')->putFileAs($id, $file, $fileName);
 
         if($artwork !== null) {
-            Storage::disk('public')->putFileAs("audiofile/$id", $artwork, "artwork.jpg");
+            Storage::disk('media')->putFileAs($id, $artwork, "artwork.jpg");
             $artworkUrl = "$rootUrl/artwork.jpg";
         }
 

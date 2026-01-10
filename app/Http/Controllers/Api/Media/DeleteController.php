@@ -22,7 +22,7 @@ class DeleteController extends Controller
         $uid = $request->get('uid');
 
         $media->where('uid', '=', $uid)->delete();
-        Storage::disk('public')->deleteDirectory("audiofile/$uid");
+        Storage::disk('public')->deleteDirectory("media/$uid");
 
         return response()->json($request->get('uid'));
     }
