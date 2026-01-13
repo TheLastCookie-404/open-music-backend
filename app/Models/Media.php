@@ -19,9 +19,11 @@ class Media extends Model
         'artist',
         'playtime',
         'playtime_seconds',
-        'artwork_url',
-        'audio_url',
-        'audio_download_url',
+        'artwork_filename',
+        'audio_filename',
+        // 'artwork_url',
+        // 'audio_url',
+        // 'audio_download_url',
     ];
 
     protected $casts = [
@@ -30,8 +32,9 @@ class Media extends Model
         'artist',
         'playtime',
         'playtime_seconds',
-        'artwork_url',
-        'audio_url',
-        'audio_download_url',
+        'artwork_filename',
+        'audio_filename',
+        // 'audio_url',
+        // 'audio_download_url',
     ];
 }

@@ -19,9 +19,8 @@ return new class extends Migration
             $table->string('artist')->nullable();
             $table->string('playtime')->nullable();
             $table->float('playtime_seconds')->nullable();
-            $table->string('artwork_url')->nullable();
-            $table->string('audio_url');
-            $table->string('audio_download_url')->nullable();
+            $table->string('artwork_filename')->nullable();
+            $table->string('audio_filename');
         });
     }
 

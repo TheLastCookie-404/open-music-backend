@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Owenoj\LaravelGetId3\GetId3;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Illuminate\Support\Str;
 
 class UploadController extends Controller
 {
@@ -21,12 +20,12 @@ class UploadController extends Controller
 
         $fileName = $request->file('audio')->getClientOriginalName();
         $file = $request->file('audio');
-        $id =  str()->random(4) . time();
+        $uId =  str()->random(4) . time();
         $metadata = GetId3::fromUploadedFile($file);
 
-        $fileUrls = $this->upload($id, $file, $fileName, $metadata->getArtwork(true));
+        $fileUrls = $this->upload($uId, $file, $fileName, $metadata->getArtwork(true));
 
-        $this->storeInDB($id, $metadata, $fileUrls);
+        $this->storeInDB($uId, $metadata, $fileUrls);
 
         return response()->json([
             "message" => "uploaded"
@@ -34,25 +33,21 @@ class UploadController extends Controller
     }
 
 
-    private function upload(string $id, UploadedFile $file, string $fileName, mixed $artwork)
+    private function upload(string $uId, UploadedFile $file, string $fileName, mixed $artwork)
     {
-        $rootUrl = url("storage/media/$id");
         $fileNameEncoded = rawurlencode($fileName);
-        $audioUrl = "$rootUrl/$fileNameEncoded";
-        $artworkUrl = null;
+        $artworkFileName = null;
 
-        Log::info($audioUrl);
-
-        Storage::disk('media')->putFileAs($id, $file, $fileName);
+        Storage::disk('media')->putFileAs($uId, $file, $fileName);
 
         if($artwork !== null) {
-            Storage::disk('media')->putFileAs($id, $artwork, "artwork.jpg");
-            $artworkUrl = "$rootUrl/artwork.jpg";
+            Storage::disk('media')->putFileAs($uId, $artwork, "artwork.jpg");
+            $artworkFileName = 'artwork.jpg';
         }
 
         return [
-            'artwork_url' => $artworkUrl,
-            'audio_url' => $audioUrl
+            'artwork_filename' => $artworkFileName,
+            'audio_filename' => $fileNameEncoded
         ];
     }
 
@@ -64,9 +59,8 @@ class UploadController extends Controller
             'artist' => $metadata->getArtist(),
             'playtime' => $metadata->getPlaytime(),
             'playtime_seconds' => $metadata->getPlaytimeSeconds(),
-            'artwork_url' => $fileUrls['artwork_url'],
-            'audio_url' => $fileUrls['audio_url'],
-            'audio_download_url' => null,
+            'artwork_filename' => $fileUrls['artwork_filename'],
+            'audio_filename' => $fileUrls['audio_filename'],
         ]);
     }
 } 
