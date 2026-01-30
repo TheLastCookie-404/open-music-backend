@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Media;
 use Illuminate\Http\Request;
 use App\Http\Resources\MediaResource;
+use Illuminate\Support\Facades\Log;
 
 class TrackController extends Controller
 {
@@ -29,6 +30,8 @@ class TrackController extends Controller
 
         $trackName = $request->get('name');
 
+        Log::info($trackName);
+
         $trackList = $media
             ->where('title', '=', $trackName)
             ->get();
@@ -39,7 +42,7 @@ class TrackController extends Controller
 
     private function formatResponse($trackList)
     {
-        $trackList->toResourceCollection();
+        $trackList = $trackList->toResourceCollection();
         $tracksCount = count($trackList);
 
         return response()->json(
