@@ -12,33 +12,41 @@ class TrackController extends Controller
     /**
      * Display the specified resource.
      */
+
+    public function index(Media $media) 
+    {
+        $trackList = $media->all();
+
+        return $this->formatResponse($trackList);
+    }
+
+
     public function show(Request $request, Media $media)
     {
         $request->validate([
-            'name' => 'nullable|string|max:218|min:1'
+            'name' => 'string|max:218|min:1'
         ]);
 
         $trackName = $request->get('name');
 
-        return response()->json(
-            $this->getTrack($media, $trackName)
-        );
+        $trackList = $media
+            ->where('title', '=', $trackName)
+            ->get();
+
+        return $this->formatResponse($trackList);
     }
 
-    private function getTrack(Media $media, ?string $trackName)
+
+    private function formatResponse($trackList)
     {
-        $trackList = $media::when($trackName, function ($query) use ($trackName) {
-            return $query->where('title', '=', $trackName);
-        })->latest('id')->get();
-
-        // Format json
-        $trackList = $trackList->toResourceCollection();
-
+        $trackList->toResourceCollection();
         $tracksCount = count($trackList);
 
-        return [
-            'found' => $tracksCount,
-            'tracks' => $trackList
-        ];
+        return response()->json(
+            [
+                'found' => $tracksCount,
+                'tracks' => $trackList
+            ]              
+        );  
     }
 }

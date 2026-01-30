@@ -24,6 +24,7 @@ Route::middleware('auth:api')->group(function () {
     Route::post('tracks/delete', [DeleteController::class, 'destroy']);
 });
 
-Route::get('tracks', [TrackController::class, 'show']);
+Route::get('tracks', [TrackController::class, 'index']);
+Route::get('tracks/search', [TrackController::class, 'show']);
 Route::post('login', [LoginController::class, 'index']);
 Route::post('refresh', [RefreshController::class, 'index']);
