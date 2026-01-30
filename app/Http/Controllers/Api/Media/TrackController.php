@@ -30,15 +30,12 @@ class TrackController extends Controller
 
         $trackName = $request->get('name');
 
-        Log::info($trackName);
-
         $trackList = $media
-            ->where('title', '=', $trackName)
+            ->where('title', 'LIKE', value: '%' . $trackName . '%')
             ->get();
 
         return $this->formatResponse($trackList);
     }
-
 
     private function formatResponse($trackList)
     {
