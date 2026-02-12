@@ -10,8 +10,9 @@ A robust RESTful API for a music streaming service built with Laravel. This API 
 - Redis (optional, for caching)
 - Laravel >= 11.x
 
-## Documentation
-- In progress
-
 ## API Example
 [open-music.the-last-cookie.com](https://open-music.the-last-cookie.com/)
+
+
+## Documentation
+- In progress
