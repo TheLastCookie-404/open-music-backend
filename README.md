@@ -2,7 +2,7 @@
 
 A robust RESTful API for a music streaming service built with Laravel. This API provides endpoints for managing artists, albums, tracks, playlists, and user interactions.
 
-## 🔧 Requirements
+## Requirements
 
 - PHP >= 8.4
 - Composer
