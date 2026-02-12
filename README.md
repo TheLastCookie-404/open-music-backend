@@ -15,4 +15,4 @@ A robust RESTful API for a music streaming service built with Laravel. This API 
 
 
 ## Documentation
-- In progress
+In progress
