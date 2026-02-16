@@ -25,19 +25,29 @@ class TrackController extends Controller
     public function show(Request $request, Media $media)
     {
         $request->validate([
-            'name' => 'string|max:218|min:1'
+            'title' => 'nullable|string|max:218|min:1',
+            'artist' => 'nullable|string|max:218|min:1',
         ]);
 
-        $trackName = $request->get('name');
+        $title = $request->get('title');
+        $artist = $request->get('artist');
+
+        // $trackList = $media
+        //     ->where('title', 'LIKE', '%' . $title . '%')->get();
 
         $trackList = $media
-            ->where('title', 'LIKE', value: '%' . $trackName . '%')
+            ->when($title, function($query, $title) {
+               return $query->where('title', 'LIKE', "%$title%");
+            })
+            ->when($artist, function($query, $artist) {
+               return $query->orWhere('artist', 'LIKE', "%$artist%");
+            })
             ->get();
 
         return $this->formatResponse($trackList);
     }
 
-    private function formatResponse($trackList)
+    private function formatResponse(mixed $trackList)
     {
         $trackList = $trackList->toResourceCollection();
         $tracksCount = count($trackList);
