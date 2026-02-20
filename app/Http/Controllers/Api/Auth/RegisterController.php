@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Symfony\Component\HttpFoundation\Response;
 
 class RegisterController extends AuthController
 {
@@ -24,6 +25,9 @@ class RegisterController extends AuthController
             'password' => bcrypt($request->password),
         ]);
 
-        return response()->json(['message' => 'User registered successfully', 'user' => $user], 201);
+        return response()->json([
+            'message' => 'User registered successfully', 
+            'user' => $user
+        ], Response::HTTP_CREATED);
     }
 }

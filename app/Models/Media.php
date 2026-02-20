@@ -21,6 +21,7 @@ class Media extends Model
         'playtime_seconds',
         'artwork_filename',
         'audio_filename',
+        'file_hash',
         // 'artwork_url',
         // 'audio_url',
         // 'audio_download_url',
@@ -34,6 +35,7 @@ class Media extends Model
         'playtime_seconds',
         'artwork_filename',
         'audio_filename',
+        'file_hash',
         // 'audio_url',
         // 'audio_download_url',
     ];

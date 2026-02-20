@@ -6,6 +6,7 @@ use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Http\Request;
 use PHPOpenSourceSaver\JWTAuth\Exceptions\TokenBlacklistedException;
+use Symfony\Component\HttpFoundation\Response;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -23,7 +24,7 @@ return Application::configure(basePath: dirname(__DIR__))
                 if ($request->is('api/*')) {
                     return response()->json([
                         'message' => $e->getMessage(),
-                    ], 401);
+                    ], Response::HTTP_UNAUTHORIZED);
                 }
             }
         );

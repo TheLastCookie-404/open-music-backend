@@ -24,6 +24,8 @@ class DeleteController extends Controller
         $media->where('uid', '=', $uid)->delete();
         Storage::disk('public')->deleteDirectory("media/$uid");
 
-        return response()->json($request->get('uid'));
+        return response()->json([
+            "message" => "Deleted"
+        ]);
     }
 }

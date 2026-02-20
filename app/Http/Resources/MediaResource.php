@@ -26,9 +26,10 @@ class MediaResource extends JsonResource
 
         return [
             'id' => $this->id,
+            'uid' => $this->uid,
+            'file_hash' => $this->file_hash,
             'created_at,' => $this->created_at,
             'updated_at' => $this->updated_at,
-            'uid' => $this->uid,
             'title' => $this->title,
             'artist' => $this->artist,
             'playtime' => $this->playtime,

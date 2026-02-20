@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Auth;
 
 use App\Http\Controllers\Api\AuthController;
 use PHPOpenSourceSaver\JWTAuth\Exceptions\JWTException;
+use Symfony\Component\HttpFoundation\Response;
 
 class RefreshController extends AuthController
 {
@@ -17,7 +18,7 @@ class RefreshController extends AuthController
         catch (JWTException $e) {
             return response()->json([
                 'error' => $e->getMessage(),
-            ], 401);
+            ], Response::HTTP_UNAUTHORIZED);
         }
 
         return $this->respondWithToken($token)
