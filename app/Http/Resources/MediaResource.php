@@ -51,6 +51,8 @@ class MediaResource extends JsonResource
             'updated_at' => $this->updated_at,
             'title' => $this->title,
             'artist' => $this->artist,
+            'genres' => $this->genres,
+            'album' => $this->album,
             'playtime' => $this->playtime,
             'playtime_seconds' => $this->playtime_seconds,
             'artwork_url' => $artworkUrl,

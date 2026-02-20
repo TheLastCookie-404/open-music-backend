@@ -15,13 +15,15 @@ class Media extends Model
      */
     protected $fillable = [
         'uid',
+        'file_hash',
         'title',
         'artist',
         'playtime',
         'playtime_seconds',
         'artwork_filename',
         'audio_filename',
-        'file_hash',
+        'genres',
+        'album',
         // 'artwork_url',
         // 'audio_url',
         // 'audio_download_url',
@@ -29,13 +31,15 @@ class Media extends Model
 
     protected $casts = [
         'uid',
+        'file_hash',
         'title',
         'artist',
         'playtime',
         'playtime_seconds',
         'artwork_filename',
         'audio_filename',
-        'file_hash',
+        'genres' => 'array',
+        'album',
         // 'audio_url',
         // 'audio_download_url',
     ];

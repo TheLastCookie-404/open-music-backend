@@ -66,6 +66,8 @@ class UploadController extends Controller
             'file_hash' => $fileHash,
             'title' => $metadata->getTitle(),
             'artist' => $metadata->getArtist(),
+            'genres' => $metadata->getGenres(),
+            'album' => $metadata->getAlbum(),
             'playtime' => $metadata->getPlaytime(),
             'playtime_seconds' => $metadata->getPlaytimeSeconds(),
             'artwork_filename' => $fileUrls['artwork_filename'],

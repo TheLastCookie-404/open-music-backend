@@ -7,6 +7,7 @@ use App\Models\Media;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
+use Symfony\Component\HttpFoundation\Response;
 
 class DeleteController extends Controller
 {
@@ -21,8 +22,17 @@ class DeleteController extends Controller
 
         $uid = $request->get('uid');
 
-        $media->where('uid', '=', $uid)->delete();
-        Storage::disk('public')->deleteDirectory("media/$uid");
+        $isEntryExists = $media->where('uid', '=', $uid)->exists();
+        $isDirecoryExists = Storage::disk('media')->exists("$uid");
+
+        if ($isEntryExists && $isDirecoryExists) {
+            $media->where('uid', '=', $uid)->delete();
+            Storage::disk('media')->deleteDirectory("$uid");
+        } else {
+            return response()->json([
+                "message" => "Track does not exist"
+            ], Response::HTTP_NOT_FOUND);
+        }
 
         return response()->json([
             "message" => "Deleted"
