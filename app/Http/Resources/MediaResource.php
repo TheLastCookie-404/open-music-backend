@@ -22,7 +22,7 @@ class MediaResource extends JsonResource
             'extended' => 'nullable|boolean'
         ]);
 
-        $isExtended = $request->get('extended') ?? false;
+        $isExtended = $request->get('extended');
 
         $rootUrl = url("storage/media/$this->uid");
         
@@ -56,7 +56,7 @@ class MediaResource extends JsonResource
             'artwork_url' => $artworkUrl,
             'audio_url' => $audioUrl,
             'audio_download_url' => null,
-            'full_data' => $isExtended ? $fullDataEncoded : null
+            'file_metadata' => $isExtended ? $fullDataEncoded : null
         ];
     }
 }
