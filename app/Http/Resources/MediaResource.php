@@ -2,8 +2,11 @@
 
 namespace App\Http\Resources;
 
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Log;
+use Owenoj\LaravelGetId3\GetId3;
 
 
 class MediaResource extends JsonResource
@@ -15,13 +18,29 @@ class MediaResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        $request->validate([
+            'extended' => 'nullable|boolean'
+        ]);
+
+        $isExtended = $request->get('extended') ?? false;
+
         $rootUrl = url("storage/media/$this->uid");
         
         $audioUrl = "$rootUrl/$this->audio_filename";
+        $fileNameDecoded = rawurldecode($this->audio_filename);
         $artworkUrl = null;
+        $extendedData = null;
 
         if ($this->artwork_filename !== null) {
             $artworkUrl = "$rootUrl/$this->artwork_filename";
+        }
+
+        try {
+            $metadata = GetId3::fromDiskAndPath('media', "$this->uid/$fileNameDecoded");
+            $fullData = $metadata->extractInfo();
+            $fullDataEncoded = mb_convert_encoding($fullData, 'UTF-8');
+        } catch (Exception $error) {
+            Log::error($error);
         }
 
         return [
@@ -37,6 +56,7 @@ class MediaResource extends JsonResource
             'artwork_url' => $artworkUrl,
             'audio_url' => $audioUrl,
             'audio_download_url' => null,
+            'full_data' => $isExtended ? $fullDataEncoded : null
         ];
     }
 }

@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Api\Media;
 use App\Http\Controllers\Controller;
 use App\Models\Media;
 use Illuminate\Http\Request;
-use App\Http\Resources\MediaResource;
 use Illuminate\Support\Facades\Log;
 
 class TrackController extends Controller
@@ -25,8 +24,8 @@ class TrackController extends Controller
     public function show(Request $request, Media $media)
     {
         $request->validate([
-            'title' => 'nullable|string|max:218|min:1',
-            'artist' => 'nullable|string|max:218|min:1',
+            'title' => 'required_without:artist|nullable|string|max:218|min:1',
+            'artist' => 'required_without|nullable|string|max:218|min:1',
         ]);
 
         $title = $request->get('title');
@@ -56,7 +55,7 @@ class TrackController extends Controller
             [
                 'found' => $tracksCount,
                 'tracks' => $trackList
-            ]              
+            ],          
         );  
     }
 }
