@@ -22,13 +22,13 @@ class DeleteController extends Controller
         ]);
 
         $id = $request->get('id');
-
-        Gate::authorize('delete-track', [$media, $id]);
         
         $isEntryExists = $media->where('id', '=', $id)->exists();
         $isDirecoryExists = Storage::disk('media')->exists("$id");
 
         if ($isEntryExists || $isDirecoryExists) {
+            Gate::authorize('delete-track', [$media, $id]);
+            
             $media->where('id', '=', $id)->delete();
             Storage::disk('media')->deleteDirectory("$id");
         } else {
