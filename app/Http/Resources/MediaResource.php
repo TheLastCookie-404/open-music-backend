@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -16,20 +17,19 @@ class MediaResource extends JsonResource
      *
      * @return array<string, mixed>
      */
-    public function toArray(Request $request): array
+    public function toArray(Request $request)
     {
         $request->validate([
             'extended' => 'nullable|boolean'
         ]);
 
         $isExtended = $request->get('extended');
-
         $rootUrl = url("storage/media/$this->id");
-        
         $audioUrl = "$rootUrl/$this->audio_filename";
         $fileNameDecoded = rawurldecode($this->audio_filename);
+        $uploadedBy = User::where('id', '=', $this->uploaded_by)->value('name');
         $artworkUrl = null;
-        $extendedData = null;
+
 
         if ($this->artwork_filename !== null) {
             $artworkUrl = "$rootUrl/$this->artwork_filename";
@@ -39,13 +39,15 @@ class MediaResource extends JsonResource
             $metadata = GetId3::fromDiskAndPath('media', "$this->id/$fileNameDecoded");
             $fullData = $metadata->extractInfo();
             $fullDataEncoded = mb_convert_encoding($fullData, 'UTF-8');
-        } catch (Exception $error) {
-            Log::error($error);
+        } catch (Exception $e) {
+            Log::error($e);
         }
+
 
         return [
             'id' => $this->id,
             'file_hash' => $this->file_hash,
+            'uploaded_by' => $uploadedBy,
             'created_at,' => $this->created_at,
             'updated_at' => $this->updated_at,
             'title' => $this->title,

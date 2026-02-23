@@ -32,6 +32,7 @@ class UploadController extends Controller
         $artworkFileName = 'artwork.jpg';
 
         try {
+
             $instance = $this->storeInDB($metadata, $fileHash, [
                 'artwork_filename' => $artwork !== null ? $artworkFileName : null,
                 'audio_filename' => $fileNameEncoded
@@ -39,12 +40,12 @@ class UploadController extends Controller
             
             $this->upload($instance['id'], $file, $fileName, $artwork, $artworkFileName);
         }
-        catch (Exception $error) {
-            Log::error($error);
+        catch (Exception $e) {
+            Log::error($e);
 
-            if ($error->getCode() === self::UNIQUE_VIOLATION) {
+            if ($e->getCode() === self::UNIQUE_VIOLATION) {
                 return response()->json([
-                    'message' => 'Track already exist',
+                    'message' => 'Track already exists',
                 ], Response::HTTP_CONFLICT);
             }
 
@@ -73,6 +74,7 @@ class UploadController extends Controller
         return Media::create([
             // 'uid' => $uId,
             'file_hash' => $fileHash,
+            'uploaded_by' => auth('api')->user()->id,
             'title' => $metadata->getTitle(),
             'artist' => $metadata->getArtist(),
             'genres' => $metadata->getGenres(),

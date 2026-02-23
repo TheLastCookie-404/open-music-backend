@@ -16,6 +16,7 @@ class Media extends Model
      */
     protected $fillable = [
         // 'uid',
+        'uploaded_by',
         'file_hash',
         'title',
         'artist',
@@ -32,6 +33,7 @@ class Media extends Model
 
     protected $casts = [
         // 'uid',
+        'uploaded_by',
         'file_hash',
         'title',
         'artist',

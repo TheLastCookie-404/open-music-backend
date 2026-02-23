@@ -2,7 +2,10 @@
 
 namespace App\Providers;
 
+use App\Models\Media;
+use App\Models\User;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -20,8 +23,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // Gate::define('update-post', function (User $user, Post $post) {
-        //     return $user->id === $post->user_id;
-        // });
+        Gate::define('delete-track', function (User $user, Media $media, string $id) {
+            $uploadedById = $media->where('id', '=', $id)->value('uploaded_by');
+            
+            Log::info(json_encode($media));
+            return $user->id === $uploadedById;
+            // return false;
+        });
     }
 }
