@@ -31,8 +31,6 @@ class TrackController extends Controller
         $title = $request->get('title');
         $artist = $request->get('artist');
 
-        // $trackList = $media
-        //     ->where('title', 'LIKE', '%' . $title . '%')->get();
 
         $trackList = $media
             ->when($title, function($query, $title) {

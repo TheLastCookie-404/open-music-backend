@@ -26,7 +26,6 @@ class UploadController extends Controller
         $fileNameEncoded = rawurlencode($fileName);
         $file = $request->file('audio');
         $fileHash = hash_file('sha256', $file);
-        // $uId =  str()->random(4) . time();
         $metadata = GetId3::fromUploadedFile($file);
         $artwork = $metadata->getArtwork(true);
         $artworkFileName = 'artwork.jpg';
@@ -72,7 +71,6 @@ class UploadController extends Controller
     private function storeInDB(GetId3 $metadata, string $fileHash, array $fileUrls)
     {
         return Media::create([
-            // 'uid' => $uId,
             'file_hash' => $fileHash,
             'uploaded_by' => auth('api')->user()->id,
             'title' => $metadata->getTitle(),
