@@ -2,19 +2,20 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Media extends Model
 {
-    use HasFactory;
+    use HasFactory, HasUlids;
     /**
      * The attributes that are mass assignable.
      *
      * @var list<string>
      */
     protected $fillable = [
-        'uid',
+        // 'uid',
         'file_hash',
         'title',
         'artist',
@@ -30,7 +31,7 @@ class Media extends Model
     ];
 
     protected $casts = [
-        'uid',
+        // 'uid',
         'file_hash',
         'title',
         'artist',

@@ -15,6 +15,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class UploadController extends Controller
 {
+    public const UNIQUE_VIOLATION = '23505';
     public function store(Request $request) 
     {
         $request->validate([
@@ -25,23 +26,31 @@ class UploadController extends Controller
         $fileNameEncoded = rawurlencode($fileName);
         $file = $request->file('audio');
         $fileHash = hash_file('sha256', $file);
-        $uId =  str()->random(4) . time();
+        // $uId =  str()->random(4) . time();
         $metadata = GetId3::fromUploadedFile($file);
         $artwork = $metadata->getArtwork(true);
         $artworkFileName = 'artwork.jpg';
 
         try {
-            $this->storeInDB($uId, $metadata, $fileHash, [
+            $instance = $this->storeInDB($metadata, $fileHash, [
                 'artwork_filename' => $artwork !== null ? $artworkFileName : null,
                 'audio_filename' => $fileNameEncoded
             ]);
-
-            $this->upload($uId, $file, $fileName, $artwork, $artworkFileName);
+            
+            $this->upload($instance['id'], $file, $fileName, $artwork, $artworkFileName);
         }
-        catch (Exception) {
+        catch (Exception $error) {
+            Log::error($error);
+
+            if ($error->getCode() === self::UNIQUE_VIOLATION) {
+                return response()->json([
+                    'message' => 'Track already exist',
+                ], Response::HTTP_CONFLICT);
+            }
+
             return response()->json([
-                'message' => 'Track already exist',
-            ], Response::HTTP_CONFLICT);
+                'message' => 'Track uploading failed',
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         return response()->json([
@@ -50,19 +59,19 @@ class UploadController extends Controller
     }
 
 
-    private function upload(string $uId, UploadedFile $file, string $fileName, mixed $artwork, string $artworkFileName)
+    private function upload(string $id, UploadedFile $file, string $fileName, mixed $artwork, string $artworkFileName)
     {
-        Storage::disk('media')->putFileAs($uId, $file, $fileName);
+        Storage::disk('media')->putFileAs($id, $file, $fileName);
 
         if($artwork !== null) {
-            Storage::disk('media')->putFileAs($uId, $artwork, $artworkFileName);
+            Storage::disk('media')->putFileAs($id, $artwork, $artworkFileName);
         }
     }
 
-    private function storeInDB(string $uId, GetId3 $metadata, string $fileHash, array $fileUrls)
+    private function storeInDB(GetId3 $metadata, string $fileHash, array $fileUrls)
     {
-        Media::create([
-            'uid' => $uId,
+        return Media::create([
+            // 'uid' => $uId,
             'file_hash' => $fileHash,
             'title' => $metadata->getTitle(),
             'artist' => $metadata->getArtist(),

@@ -24,7 +24,7 @@ class MediaResource extends JsonResource
 
         $isExtended = $request->get('extended');
 
-        $rootUrl = url("storage/media/$this->uid");
+        $rootUrl = url("storage/media/$this->id");
         
         $audioUrl = "$rootUrl/$this->audio_filename";
         $fileNameDecoded = rawurldecode($this->audio_filename);
@@ -36,7 +36,7 @@ class MediaResource extends JsonResource
         }
 
         try {
-            $metadata = GetId3::fromDiskAndPath('media', "$this->uid/$fileNameDecoded");
+            $metadata = GetId3::fromDiskAndPath('media', "$this->id/$fileNameDecoded");
             $fullData = $metadata->extractInfo();
             $fullDataEncoded = mb_convert_encoding($fullData, 'UTF-8');
         } catch (Exception $error) {
@@ -45,7 +45,6 @@ class MediaResource extends JsonResource
 
         return [
             'id' => $this->id,
-            'uid' => $this->uid,
             'file_hash' => $this->file_hash,
             'created_at,' => $this->created_at,
             'updated_at' => $this->updated_at,

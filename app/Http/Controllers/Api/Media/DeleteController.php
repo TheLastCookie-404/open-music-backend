@@ -17,17 +17,17 @@ class DeleteController extends Controller
     public function destroy(Request $request, Media $media)
     {
         $request->validate([
-            'uid' => 'required|string|max:32|alpha_num'
+            'id' => 'required|string|max:32|alpha_num'
         ]);
 
-        $uid = $request->get('uid');
+        $id = $request->get('id');
 
-        $isEntryExists = $media->where('uid', '=', $uid)->exists();
-        $isDirecoryExists = Storage::disk('media')->exists("$uid");
+        $isEntryExists = $media->where('id', '=', $id)->exists();
+        $isDirecoryExists = Storage::disk('media')->exists("$id");
 
-        if ($isEntryExists && $isDirecoryExists) {
-            $media->where('uid', '=', $uid)->delete();
-            Storage::disk('media')->deleteDirectory("$uid");
+        if ($isEntryExists || $isDirecoryExists) {
+            $media->where('id', '=', $id)->delete();
+            Storage::disk('media')->deleteDirectory("$id");
         } else {
             return response()->json([
                 "message" => "Track does not exist"

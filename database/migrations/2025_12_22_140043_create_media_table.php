@@ -12,9 +12,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('media', function (Blueprint $table) {
-            $table->id();
+            // $table->id();
+            $table->ulid('id')->primary()->unique();
+            $table->string('uploaded_by')->nullable();
             $table->timestamps();
-            $table->string('uid')->unique();
+            // $table->string('uid')->unique();
             $table->string('file_hash')->unique();
             $table->string('title');
             $table->string('artist')->nullable();
