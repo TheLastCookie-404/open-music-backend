@@ -16,6 +16,8 @@ use Symfony\Component\HttpFoundation\Response;
 class UploadController extends Controller
 {
     public const UNIQUE_VIOLATION = '23505';
+    public const INTEGRITY_CONSTRAINT_VIOLATION = '23000';
+
     public function store(Request $request) 
     {
         $request->validate([
@@ -42,7 +44,7 @@ class UploadController extends Controller
         catch (Exception $e) {
             Log::error($e);
 
-            if ($e->getCode() === self::UNIQUE_VIOLATION) {
+            if ($e->getCode() === self::UNIQUE_VIOLATION || $e->getCode() === self::INTEGRITY_CONSTRAINT_VIOLATION) {
                 return response()->json([
                     'message' => 'Track already exists',
                 ], Response::HTTP_CONFLICT);
