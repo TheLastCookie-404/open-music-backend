@@ -28,6 +28,7 @@ class MediaResource extends JsonResource
         $audioUrl = "$rootUrl/$this->audio_filename";
         $fileNameDecoded = rawurldecode($this->audio_filename);
         $uploadedBy = User::where('id', '=', $this->uploaded_by)->value('name');
+        $userInfo = User::where('id', '=', $this->uploaded_by);
         $artworkUrl = null;
 
 
@@ -47,7 +48,14 @@ class MediaResource extends JsonResource
         return [
             'id' => $this->id,
             'file_hash' => $this->file_hash,
-            'uploaded_by' => $uploadedBy,
+            // 'uploaded_by' => $uploadedBy,
+            'uploaded_by' => [
+                // 'id' => $userInfo->value('id'),
+                'name' => $userInfo->value('name'),
+                'nickname' => $userInfo->value('nickname'),
+                'email' => $userInfo->value('email'),
+                'role' => $userInfo->value('role'),
+            ],
             'created_at,' => $this->created_at,
             'updated_at' => $this->updated_at,
             'title' => $this->title,

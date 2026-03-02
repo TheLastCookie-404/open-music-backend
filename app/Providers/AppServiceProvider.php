@@ -26,7 +26,7 @@ class AppServiceProvider extends ServiceProvider
         Gate::define('delete-track', function (User $user, Media $media, string $id) {
             $uploadedById = $media->where('id', '=', $id)->value('uploaded_by');
             
-            return $user->id === $uploadedById;
+            return $user->id === $uploadedById || $user->role === 'superadmin';
         });
     }
 }
