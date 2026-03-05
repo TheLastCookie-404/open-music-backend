@@ -20,8 +20,19 @@ class MediaResource extends JsonResource
     public function toArray(Request $request)
     {
         $request->validate([
-            'extended' => 'nullable|boolean'
+            // 'extended' => 'nullable|boolean'
+            'extended' => 'string|in:yes,no'
         ]);
+
+        $request->mergeIfMissing([
+            'extended' => 'no'
+        ]);
+
+        // $request->mergeIfMissing([
+        //     'extended' => 'no'
+        // ]);
+
+        // $isExtended = $request->query->has('extended');
 
         $isExtended = $request->get('extended');
         $rootUrl = url("storage/media/$this->id");
@@ -67,7 +78,7 @@ class MediaResource extends JsonResource
             'artwork_url' => $artworkUrl,
             'audio_url' => $audioUrl,
             'audio_download_url' => null,
-            'file_metadata' => $isExtended ? $fullDataEncoded : null
+            'file_metadata' => $isExtended === 'yes' ? $fullDataEncoded : null
         ];
     }
 }
