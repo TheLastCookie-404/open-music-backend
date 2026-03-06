@@ -21,7 +21,6 @@ class MediaResource extends JsonResource
     public function toArray(Request $request)
     {
         $request->validate([
-            // 'extended' => 'nullable|boolean'
             'extended' => 'string|in:yes,no'
         ]);
 
@@ -33,8 +32,6 @@ class MediaResource extends JsonResource
         $rootUrl = url("storage/media/$this->id");
         $audioUrl = "$rootUrl/$this->audio_filename";
         $fileNameDecoded = rawurldecode($this->audio_filename);
-        $uploadedBy = User::where('id', '=', $this->uploaded_by)->value('name');
-        $userInfo = User::where('id', '=', $this->uploaded_by);
         $artworkUrl = null;
         $fullDataEncoded = null;
 
@@ -55,19 +52,6 @@ class MediaResource extends JsonResource
         return [
             'id' => $this->id,
             'file_hash' => $this->file_hash,
-            // 'uploaded_by' => $uploadedBy,
-            // 'uploaded_by' => [
-            //     'name' => $userInfo->value('name'),
-            //     'nickname' => $userInfo->value('nickname'),
-            //     'email' => $userInfo->value('email'),
-            //     'role' => $userInfo->value('role'),
-            // ],
-            // 'uploaded_by' => $this->user()->get([
-            //     'name', 
-            //     'nickname', 
-            //     'email', 
-            //     'role'
-            // ]),
             'uploaded_by' => [
                 'name' => $this->user()->value('name'),
                 'nickname' => $this->user()->value('nickname'),
