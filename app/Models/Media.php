@@ -16,7 +16,8 @@ class Media extends Model
      */
     protected $fillable = [
         // 'uid',
-        'uploaded_by',
+        // 'uploaded_by',
+        'user_id',
         'file_hash',
         'title',
         'artist',
@@ -33,7 +34,8 @@ class Media extends Model
 
     protected $casts = [
         // 'uid',
-        'uploaded_by',
+        // 'uploaded_by',
+        'user_id',
         'file_hash',
         'title',
         'artist',
@@ -46,4 +48,14 @@ class Media extends Model
         // 'audio_url',
         // 'audio_download_url',
     ];
+
+    // public function uploader() 
+    // {
+    //     return $this->belongsTo(User::class);
+    // }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

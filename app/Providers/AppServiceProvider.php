@@ -24,9 +24,13 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Gate::define('delete-track', function (User $user, Media $media, string $id) {
-            $uploadedById = $media->where('id', '=', $id)->value('uploaded_by');
+            $uploadedById = $media->where('id', '=', $id)->value('user_id');
             
             return $user->id === $uploadedById || $user->role === 'superadmin';
+        });
+
+        Gate::define('upload-track', function (User $user) {
+            return $user->role === 'admin' || $user->role === 'superadmin';
         });
     }
 }

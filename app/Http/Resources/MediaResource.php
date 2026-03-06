@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Media;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
@@ -28,12 +29,6 @@ class MediaResource extends JsonResource
             'extended' => 'no'
         ]);
 
-        // $request->mergeIfMissing([
-        //     'extended' => 'no'
-        // ]);
-
-        // $isExtended = $request->query->has('extended');
-
         $isExtended = $request->get('extended');
         $rootUrl = url("storage/media/$this->id");
         $audioUrl = "$rootUrl/$this->audio_filename";
@@ -41,6 +36,7 @@ class MediaResource extends JsonResource
         $uploadedBy = User::where('id', '=', $this->uploaded_by)->value('name');
         $userInfo = User::where('id', '=', $this->uploaded_by);
         $artworkUrl = null;
+        $fullDataEncoded = null;
 
 
         if ($this->artwork_filename !== null) {
@@ -60,14 +56,25 @@ class MediaResource extends JsonResource
             'id' => $this->id,
             'file_hash' => $this->file_hash,
             // 'uploaded_by' => $uploadedBy,
+            // 'uploaded_by' => [
+            //     'name' => $userInfo->value('name'),
+            //     'nickname' => $userInfo->value('nickname'),
+            //     'email' => $userInfo->value('email'),
+            //     'role' => $userInfo->value('role'),
+            // ],
+            // 'uploaded_by' => $this->user()->get([
+            //     'name', 
+            //     'nickname', 
+            //     'email', 
+            //     'role'
+            // ]),
             'uploaded_by' => [
-                // 'id' => $userInfo->value('id'),
-                'name' => $userInfo->value('name'),
-                'nickname' => $userInfo->value('nickname'),
-                'email' => $userInfo->value('email'),
-                'role' => $userInfo->value('role'),
+                'name' => $this->user()->value('name'),
+                'nickname' => $this->user()->value('nickname'),
+                'email' => $this->user()->value('email'),
+                'role' => $this->user()->value('role'),
             ],
-            'created_at,' => $this->created_at,
+            'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
             'title' => $this->title,
             'artist' => $this->artist,
@@ -78,7 +85,7 @@ class MediaResource extends JsonResource
             'artwork_url' => $artworkUrl,
             'audio_url' => $audioUrl,
             'audio_download_url' => null,
-            'file_metadata' => $isExtended === 'yes' ? $fullDataEncoded : null
+            'file_metadata' => $isExtended === 'yes' ? $fullDataEncoded : null,
         ];
     }
 }

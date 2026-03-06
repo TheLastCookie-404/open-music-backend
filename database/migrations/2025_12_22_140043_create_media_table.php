@@ -14,7 +14,12 @@ return new class extends Migration
         Schema::create('media', function (Blueprint $table) {
             // $table->id();
             $table->ulid('id')->primary()->unique();
-            $table->string('uploaded_by')->nullable();
+            // $table->string('uploaded_by')->nullable();
+            $table
+                ->foreignUlid('user_id')
+                ->references('id')
+                ->on('users')
+                ->nullOnDelete();
             $table->timestamps();
             // $table->string('uid')->unique();
             $table->string('file_hash')->unique();

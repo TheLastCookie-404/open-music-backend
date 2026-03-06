@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Api\Media;
 
 use App\Http\Controllers\Controller;
 use App\Models\Media;
-use Error;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -12,6 +11,7 @@ use Illuminate\Support\Facades\Storage;
 use Owenoj\LaravelGetId3\GetId3;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Support\Facades\Gate;
 
 class UploadController extends Controller
 {
@@ -31,6 +31,8 @@ class UploadController extends Controller
         $metadata = GetId3::fromUploadedFile($file);
         $artwork = $metadata->getArtwork(true);
         $artworkFileName = 'artwork.jpg';
+
+        Gate::authorize('upload-track');
 
         try {
 
@@ -74,7 +76,7 @@ class UploadController extends Controller
     {
         return Media::create([
             'file_hash' => $fileHash,
-            'uploaded_by' => auth('api')->user()->id,
+            'user_id' => auth('api')->user()->id,
             'title' => $metadata->getTitle(),
             'artist' => $metadata->getArtist(),
             'genres' => $metadata->getGenres(),
