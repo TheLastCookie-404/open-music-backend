@@ -32,5 +32,9 @@ class AppServiceProvider extends ServiceProvider
         Gate::define('upload-track', function (User $user) {
             return $user->role === 'admin' || $user->role === 'superadmin';
         });
+
+        Gate::define('update-role', function (User $user) {
+            return $user->role === 'superadmin';
+        });
     }
 }

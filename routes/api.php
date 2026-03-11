@@ -13,14 +13,15 @@ use App\Http\Controllers\Api\Auth\
     LoginController,
     RefreshController,
     ProfileController,
-    LogoutController
+    LogoutController,
+    RoleController
 };
 
 Route::middleware('auth:api')->group(function () {
     Route::get('profile', [ProfileController::class, 'show']);
     Route::post('logout', [LogoutController::class, 'index']);
     Route::post('upload', [UploadController::class, 'store']);
-    Route::post('register', [RegisterController::class, 'index']);
+    Route::post('role', [RoleController::class, 'update']);
     Route::post('tracks/delete', [DeleteController::class, 'destroy']);
 });
 
@@ -28,3 +29,4 @@ Route::get('tracks', [TrackController::class, 'index']);
 Route::get('tracks/search', [TrackController::class, 'show']);
 Route::post('login', [LoginController::class, 'index']);
 Route::post('refresh', [RefreshController::class, 'index']);
+Route::post('register', [RegisterController::class, 'index']);

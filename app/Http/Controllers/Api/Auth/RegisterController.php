@@ -14,9 +14,9 @@ class RegisterController extends AuthController
     public function index(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:6|confirmed',
+            'name' => 'required|string|between:1,255',
+            'email' => 'required|string|email|between:5,255|unique:users',
+            'password' => 'required|string|alpha_dash|between:6,12|confirmed',
         ]);
 
         $user = User::create([

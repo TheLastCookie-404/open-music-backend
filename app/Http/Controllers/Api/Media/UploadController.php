@@ -59,7 +59,7 @@ class UploadController extends Controller
 
         return response()->json([
             'message' => 'Uploaded',
-        ]);
+        ], Response::HTTP_CREATED);
     }
 
 
