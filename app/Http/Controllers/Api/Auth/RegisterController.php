@@ -15,7 +15,7 @@ class RegisterController extends AuthController
     {
         $request->validate([
             'name' => 'required|string|between:1,255',
-            'email' => 'required|string|email|between:5,255|unique:users',
+            'email' => 'required|email:rfc,dns,strict|between:5,255|unique:users',
             'password' => 'required|string|alpha_dash|between:6,12|confirmed',
         ]);
 
