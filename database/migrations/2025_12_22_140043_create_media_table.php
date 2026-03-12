@@ -21,10 +21,10 @@ return new class extends Migration
             $table->timestamps();
             $table->string('file_hash')->unique();
             $table->enum('status', [
-                'avilable', 
+                'available', 
                 'restricted', 
                 'forbidden'
-            ])->default('avilable');
+            ])->default('available');
             $table->string('title');
             $table->string('artist')->nullable();
             $table->json('genres')->nullable();

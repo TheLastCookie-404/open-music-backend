@@ -7,6 +7,7 @@ use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Owenoj\LaravelGetId3\GetId3;
 
@@ -32,6 +33,7 @@ class MediaResource extends JsonResource
         $rootUrl = url("storage/media/$this->id");
         $audioUrl = "$rootUrl/$this->audio_filename";
         $fileNameDecoded = rawurldecode($this->audio_filename);
+        $isUserAccessAllowed = Gate::allows('get-track', [$this->status, true]);
         $artworkUrl = null;
         $fullDataEncoded = null;
 
@@ -66,8 +68,10 @@ class MediaResource extends JsonResource
             'album' => $this->album,
             'playtime' => $this->playtime,
             'playtime_seconds' => $this->playtime_seconds,
+            'status' => $this->status,
             'artwork_url' => $artworkUrl,
-            'audio_url' => $audioUrl,
+            // 'audio_url' => $audioUrl,
+            'audio_url' => $isUserAccessAllowed ? $audioUrl : null,
             'audio_download_url' => null,
             'file_metadata' => $isExtended === 'yes' ? $fullDataEncoded : null,
         ];
