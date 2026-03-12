@@ -12,17 +12,19 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('media', function (Blueprint $table) {
-            // $table->id();
             $table->ulid('id')->primary()->unique();
-            // $table->string('uploaded_by')->nullable();
             $table
                 ->foreignUlid('user_id')
                 ->references('id')
                 ->on('users')
                 ->nullOnDelete();
             $table->timestamps();
-            // $table->string('uid')->unique();
             $table->string('file_hash')->unique();
+            $table->enum('status', [
+                'avilable', 
+                'restricted', 
+                'forbidden'
+            ])->default('avilable');
             $table->string('title');
             $table->string('artist')->nullable();
             $table->json('genres')->nullable();
