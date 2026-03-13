@@ -27,7 +27,7 @@ class RoleController extends AuthController
 
         Gate::authorize('update-role');
 
-        $user = $user->find($userId);
+        $user = $user->whereId($userId);
         $userName = $user->value('name');
 
         try {

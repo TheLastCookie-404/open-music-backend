@@ -31,6 +31,7 @@ class DeleteController extends Controller
             
             $media->where('id', '=', $id)->delete();
             Storage::disk('media')->deleteDirectory("$id");
+            Storage::disk('public-media')->deleteDirectory("$id");
         } else {
             return response()->json([
                 "message" => "Track does not exist"

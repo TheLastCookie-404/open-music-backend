@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\Media\
 {
+    FileAccessController,
     DeleteController,
     UploadController,
     TrackController
@@ -25,6 +26,7 @@ Route::middleware('auth:api')->group(function () {
     Route::post('tracks/delete', [DeleteController::class, 'destroy']);
 });
 
+Route::get('file/{id}', [FileAccessController::class, 'index']);
 Route::get('tracks', [TrackController::class, 'index']);
 Route::get('tracks/search', [TrackController::class, 'show']);
 Route::post('login', [LoginController::class, 'index']);

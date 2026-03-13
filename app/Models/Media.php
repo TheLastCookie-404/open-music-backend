@@ -15,8 +15,6 @@ class Media extends Model
      * @var list<string>
      */
     protected $fillable = [
-        // 'uid',
-        // 'uploaded_by',
         'user_id',
         'file_hash',
         'status',
@@ -28,14 +26,9 @@ class Media extends Model
         'audio_filename',
         'genres',
         'album',
-        // 'artwork_url',
-        // 'audio_url',
-        // 'audio_download_url',
     ];
 
     protected $casts = [
-        // 'uid',
-        // 'uploaded_by',
         'user_id',
         'file_hash',
         'status',
@@ -47,14 +40,7 @@ class Media extends Model
         'audio_filename',
         'genres' => 'array',
         'album',
-        // 'audio_url',
-        // 'audio_download_url',
     ];
-
-    // public function uploader() 
-    // {
-    //     return $this->belongsTo(User::class);
-    // }
 
     public function user()
     {

@@ -47,11 +47,20 @@ return [
             'report' => false,
         ],
 
-        'media' => [
+        'public-media' => [
             'driver' => 'local',
             'root' => storage_path('app/public/media'),
             'url' => env('APP_URL').'/storage/media',
             'visibility' => 'public',
+            'throw' => false,
+            'report' => false,
+        ],
+
+        'media' => [
+            'driver' => 'local',
+            'root' => storage_path('app/private/media'),
+            'url' => env('APP_URL').'/storage/media',
+            'visibility' => 'private',
             'throw' => false,
             'report' => false,
         ],

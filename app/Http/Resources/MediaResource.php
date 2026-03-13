@@ -31,9 +31,9 @@ class MediaResource extends JsonResource
 
         $isExtended = $request->get('extended');
         $rootUrl = url("storage/media/$this->id");
-        $audioUrl = "$rootUrl/$this->audio_filename";
+        $audioUrl = url("api/file/$this->id");
         $fileNameDecoded = rawurldecode($this->audio_filename);
-        $isUserAccessAllowed = Gate::allows('get-track', [$this->status, true]);
+        $isUserAccessAllowed = Gate::allows('get-track', [$this->status]);
         $artworkUrl = null;
         $fullDataEncoded = null;
 
@@ -68,9 +68,7 @@ class MediaResource extends JsonResource
             'album' => $this->album,
             'playtime' => $this->playtime,
             'playtime_seconds' => $this->playtime_seconds,
-            'status' => $this->status,
             'artwork_url' => $artworkUrl,
-            // 'audio_url' => $audioUrl,
             'audio_url' => $isUserAccessAllowed ? $audioUrl : null,
             'audio_download_url' => null,
             'file_metadata' => $isExtended === 'yes' ? $fullDataEncoded : null,

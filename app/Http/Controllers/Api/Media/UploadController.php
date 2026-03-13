@@ -68,7 +68,7 @@ class UploadController extends Controller
         Storage::disk('media')->putFileAs($id, $file, $fileName);
 
         if($artwork !== null) {
-            Storage::disk('media')->putFileAs($id, $artwork, $artworkFileName);
+            Storage::disk('public-media')->putFileAs($id, $artwork, $artworkFileName);
         }
     }
 

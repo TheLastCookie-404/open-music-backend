@@ -46,9 +46,6 @@ class AppServiceProvider extends ServiceProvider
         });
 
         Gate::define('get-track', function (?User $user, string $mediaStatus) {
-            // return $user->role === 'user' && !\in_array($mediaStatus, ['restricted', 'forbidden']);
-            Log::info(json_encode([$mediaStatus, self::ROLE_RESTRICTIONS[$user->role ?? 'guest']]));
-            // Log::info(json_encode(\in_array($mediaStatus, self::ROLE_RESTRICTIONS[$user->value('role')])));
             return \in_array($mediaStatus, self::ROLE_RESTRICTIONS[$user->role ?? 'guest']);
         });
     }
