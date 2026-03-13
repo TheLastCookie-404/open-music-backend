@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Media;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\MediaResource;
 use App\Models\Media;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -15,9 +16,13 @@ class TrackController extends Controller
 
     public function index(Media $media) 
     {
-        $trackList = $media->all();
+        // $trackList = $media->all();
+        
+        // return $this->formatResponse($trackList);
 
-        return $this->formatResponse($trackList);
+        $trackList = $media->paginate(5)->withQueryString();
+
+        return MediaResource::collection($trackList);
     }
 
 
@@ -39,9 +44,11 @@ class TrackController extends Controller
             ->when($artist, function($query, $artist) {
                return $query->orWhere('artist', 'LIKE', "%$artist%");
             })
-            ->get();
+            // ->get();
+            ->paginate(5)->withQueryString();
 
-        return $this->formatResponse($trackList);
+        return MediaResource::collection($trackList);
+        // return $this->formatResponse($trackList);
     }
 
     private function formatResponse(mixed $trackList)
