@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Media;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\MediaResource;
+use App\Http\Resources\MediaCollection;
 use App\Models\Media;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -20,9 +21,11 @@ class TrackController extends Controller
         
         // return $this->formatResponse($trackList);
 
-        $trackList = $media->paginate(5)->withQueryString();
+        // $trackList = $media->paginate(5)->withQueryString();
+        $trackList = $media->cursorPaginate(5)->withQueryString();
 
-        return MediaResource::collection($trackList);
+        // return MediaResource::collection($trackList);
+        return new MediaCollection($trackList);
     }
 
 
@@ -45,9 +48,10 @@ class TrackController extends Controller
                return $query->orWhere('artist', 'LIKE', "%$artist%");
             })
             // ->get();
-            ->paginate(5)->withQueryString();
+            ->cursorPaginate(5)->withQueryString();
 
-        return MediaResource::collection($trackList);
+        return new MediaCollection($trackList);
+        // return MediaResource::collection($trackList);
         // return $this->formatResponse($trackList);
     }
 

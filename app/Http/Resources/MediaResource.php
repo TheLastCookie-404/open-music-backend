@@ -36,6 +36,8 @@ class MediaResource extends JsonResource
         $artworkUrl = null;
         $fullDataEncoded = null;
 
+        // Однажды Коля оказался в гето, среди больших добрых и накаченых мужиков
+
 
         if ($this->artwork_filename !== null) {
             $artworkUrl = "$rootUrl/$this->artwork_filename";
@@ -48,7 +50,6 @@ class MediaResource extends JsonResource
         } catch (Exception $e) {
             Log::error($e);
         }
-
 
         return [
             'id' => $this->id,
