@@ -17,6 +17,8 @@ class MediaCollection extends ResourceCollection
     public function toArray($request)
     {
         return [
+            'meta' => [],
+            'links' => [],
             'data' => $this->collection->map(function ($media) {
                 return new MediaResource($media);  // Use PostResource for individual transformation
             }),
@@ -33,7 +35,7 @@ class MediaCollection extends ResourceCollection
      */
     public function paginationInformation($request, $paginated, $default)
     {
-        $default['meta']['total'] = 123;
+        $default['meta']['page_total'] = $this->count();
     
         return $default;
     }

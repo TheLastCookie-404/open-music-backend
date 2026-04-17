@@ -3,42 +3,40 @@
 namespace App\Http\Controllers\Api\Media;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\MediaResource;
 use App\Http\Resources\MediaCollection;
 use App\Models\Media;
 use Illuminate\Http\Request;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\Log;
 
 class TrackController extends Controller
 {
-    /**
-     * Display the specified resource.
-     */
+    private const PAGINATION_RULES = 'nullable|string|in:cursor,none';
 
-    public function index(Media $media) 
+    public function index(Request $request, Media $media) 
     {
-        // $trackList = $media->all();
-        
-        // return $this->formatResponse($trackList);
+        $request->validate([
+            'pagination' => self::PAGINATION_RULES,
+        ]);
 
-        // $trackList = $media->paginate(5)->withQueryString();
-        $trackList = $media->cursorPaginate(5)->withQueryString();
+        $pagination = $request->get('pagination');
 
-        // return MediaResource::collection($trackList);
+        $trackList = $this->choosePaginationMethod($media, $pagination, 5);
+
         return new MediaCollection($trackList);
     }
-
 
     public function show(Request $request, Media $media)
     {
         $request->validate([
             'title' => 'required_without:artist|nullable|string|max:218|min:1',
             'artist' => 'required_without|nullable|string|max:218|min:1',
+            'pagination' => self::PAGINATION_RULES,
         ]);
 
         $title = $request->get('title');
         $artist = $request->get('artist');
-
+        $pagination = $request->get('pagination');
 
         $trackList = $media
             ->when($title, function($query, $title) {
@@ -46,25 +44,19 @@ class TrackController extends Controller
             })
             ->when($artist, function($query, $artist) {
                return $query->orWhere('artist', 'LIKE', "%$artist%");
-            })
-            // ->get();
-            ->cursorPaginate(5)->withQueryString();
+            });
+
+        $trackList = $this->choosePaginationMethod($trackList, $pagination, 5);
 
         return new MediaCollection($trackList);
-        // return MediaResource::collection($trackList);
-        // return $this->formatResponse($trackList);
     }
 
-    private function formatResponse(mixed $trackList)
+    private function choosePaginationMethod(mixed $media, ?string $method, int $perPage) 
     {
-        $trackList = $trackList->toResourceCollection();
-        $tracksCount = count($trackList);
-
-        return response()->json(
-            [
-                'found' => $tracksCount,
-                'tracks' => $trackList
-            ],          
-        );  
+        return match ($method) {
+            'none' => $media->get(),
+            'cursor' => $media->cursorPaginate($perPage)->withQueryString(),
+            default => $media->paginate($perPage)->withQueryString(),
+        };
     }
 }
