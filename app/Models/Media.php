@@ -25,6 +25,7 @@ class Media extends Model
         'artwork_filename',
         'audio_filename',
         'genres',
+        'tags' => 'array',
         'album',
     ];
 
@@ -39,6 +40,7 @@ class Media extends Model
         'artwork_filename',
         'audio_filename',
         'genres' => 'array',
+        'tags' => 'array',
         'album',
     ];
 

@@ -28,6 +28,7 @@ return new class extends Migration
             $table->string('title');
             $table->string('artist')->nullable();
             $table->json('genres')->nullable();
+            $table->json('tags')->nullable();
             $table->string('album')->nullable();
             $table->string('playtime')->nullable();
             $table->float('playtime_seconds')->nullable();

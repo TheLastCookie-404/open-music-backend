@@ -65,6 +65,7 @@ class MediaResource extends JsonResource
             'title' => $this->title,
             'artist' => $this->artist,
             'genres' => $this->genres,
+            'tags' => $this->tags,
             'album' => $this->album,
             'playtime' => $this->playtime,
             'playtime_seconds' => $this->playtime_seconds,
