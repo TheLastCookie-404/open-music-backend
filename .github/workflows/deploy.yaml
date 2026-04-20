@@ -8,6 +8,10 @@ jobs:
   deploy:
     name: deploy
     runs-on: ubuntu-latest
+    env:
+      SUPER_ADMIN_NAME: ${{ secrets.SUPER_ADMIN_NAME }}
+      SUPER_ADMIN_MAIL: ${{ secrets.SUPER_ADMIN_MAIL }}
+      SUPER_ADMIN_HASH_SECRET: ${{ secrets.SUPER_ADMIN_HASH_SECRET }}
 
     steps:
       - uses: actions/checkout@v4
