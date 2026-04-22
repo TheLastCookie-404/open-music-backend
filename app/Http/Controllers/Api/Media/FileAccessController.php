@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class FileAccessController extends Controller
 {
@@ -33,6 +34,10 @@ class FileAccessController extends Controller
         
         $file = Storage::disk('media')->path("$id/$fileName");
 
-        return response()->file($file);
+        $response = new BinaryFileResponse($file);
+        BinaryFileResponse::trustXSendfileTypeHeader();
+
+        return $response;
+        // return response()->file($file);
     }
 }
