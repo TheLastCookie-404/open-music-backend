@@ -38,7 +38,7 @@ class UploadController extends Controller
 
             $instance = $this->storeInDB($metadata, $fileHash, [
                 'artwork_filename' => $artwork !== null ? $artworkFileName : null,
-                'audio_filename' => $fileNameEncoded
+                'audio_filename' => $fileName // $fileNameEncoded
             ]);
             
             $this->upload($instance['id'], $file, $fileName, $artwork, $artworkFileName);
