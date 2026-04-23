@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Media;
 
+use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Controller;
 use App\Models\Media;
 use Illuminate\Http\Request;
@@ -33,6 +34,10 @@ class FileAccessController extends Controller
         Gate::authorize('get-track', [$trackStatus]);
         
         $file = Storage::disk('media')->path("$id/$fileName");
+
+        if (auth('api')->check()) {
+            Log::info(auth('api')->user()->name . ' now listens: ' . $track->value('title') . ' - ' . $track->value('artist'));
+        }
 
         $response = new BinaryFileResponse($file);
         BinaryFileResponse::trustXSendfileTypeHeader();
