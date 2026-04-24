@@ -21,7 +21,7 @@ class TrackController extends Controller
 
         $pagination = $request->get('pagination');
 
-        $trackList = $this->choosePaginationMethod($media, $pagination, 5);
+        $trackList = $this->choosePaginationMethod($media, $pagination, 10);
 
         return new MediaCollection($trackList);
     }
@@ -46,7 +46,7 @@ class TrackController extends Controller
                return $query->orWhere('artist', 'LIKE', "%$artist%");
             });
 
-        $trackList = $this->choosePaginationMethod($trackList, $pagination, 5);
+        $trackList = $this->choosePaginationMethod($trackList, $pagination, 10);
 
         return new MediaCollection($trackList);
     }
