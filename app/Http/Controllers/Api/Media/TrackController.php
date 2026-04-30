@@ -53,10 +53,12 @@ class TrackController extends Controller
 
     private function choosePaginationMethod(mixed $media, ?string $method, int $perPage) 
     {
+        $latest = $media->latest();
+
         return match ($method) {
-            'none' => $media->get(),
-            'cursor' => $media->cursorPaginate($perPage)->withQueryString(),
-            default => $media->paginate($perPage)->withQueryString(),
+            'none' => $latest->get(),
+            'cursor' => $latest->cursorPaginate($perPage)->withQueryString(),
+            default => $latest->paginate($perPage)->withQueryString(),
         };
     }
 }

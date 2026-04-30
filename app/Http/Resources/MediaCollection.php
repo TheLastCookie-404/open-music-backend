@@ -20,7 +20,7 @@ class MediaCollection extends ResourceCollection
             'meta' => [],
             'links' => [],
             'data' => $this->collection->map(function ($media) {
-                return new MediaResource($media);  // Use PostResource for individual transformation
+                return new MediaResource($media);
             }),
         ];
     }
