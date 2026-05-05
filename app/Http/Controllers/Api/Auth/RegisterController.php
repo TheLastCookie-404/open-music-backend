@@ -19,11 +19,16 @@ class RegisterController extends AuthController
             'password' => 'required|string|alpha_dash|between:6,12|confirmed',
         ]);
 
+        $name = $request->get('name');
+        $name = $request->get('name');
+        $email = $request->get('email');
+        $password = $request->get('password');
+
         $user = User::create([
-            'name' => $request->name,
-            'nickname' => $request->name,
-            'email' => $request->email,
-            'password' => bcrypt($request->password),
+            'name' => $name,
+            'nickname' => $name,
+            'email' => $email,
+            'password' => bcrypt($password)
         ]);
 
         return response()->json([
