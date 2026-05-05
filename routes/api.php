@@ -1,13 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\Media\
-{
-    FileAccessController,
-    DeleteController,
-    UploadController,
-    TrackController
-};
 use App\Http\Controllers\Api\Auth\ 
 {
     RegisterController,
@@ -17,6 +10,17 @@ use App\Http\Controllers\Api\Auth\
     LogoutController,
     UpdateRoleController,
 };
+use App\Http\Controllers\Api\Media\
+{
+    FileAccessController,
+    DeleteController,
+    UploadController,
+    TrackController
+};
+use App\Http\Controllers\Api\Playlist\
+{
+    CreatePlaylistController
+};
 
 Route::middleware('auth:api')->group(function () {
     Route::get('profile', [ProfileController::class, 'show']);
@@ -24,6 +28,7 @@ Route::middleware('auth:api')->group(function () {
     Route::post('upload', [UploadController::class, 'store']);
     Route::post('role', [UpdateRoleController::class, 'update']);
     Route::post('tracks/delete', [DeleteController::class, 'destroy']);
+    Route::post('playlist', [CreatePlaylistController::class, 'index']);
 });
 
 Route::get('file/{id}', [FileAccessController::class, 'index']);

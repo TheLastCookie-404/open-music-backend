@@ -25,23 +25,13 @@ class Media extends Model
         'artwork_filename',
         'audio_filename',
         'genres',
-        'tags' => 'array',
+        'tags',
         'album',
     ];
 
     protected $casts = [
-        'user_id',
-        'file_hash',
-        'status',
-        'title',
-        'artist',
-        'playtime',
-        'playtime_seconds',
-        'artwork_filename',
-        'audio_filename',
         'genres' => 'array',
         'tags' => 'array',
-        'album',
     ];
 
     public function user()
