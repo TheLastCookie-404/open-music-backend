@@ -19,7 +19,8 @@ use App\Http\Controllers\Api\Media\
 };
 use App\Http\Controllers\Api\Playlist\
 {
-    CreatePlaylistController
+    CreatePlaylistController,
+    UpdatePlaylistController
 };
 
 Route::middleware('auth:api')->group(function () {
@@ -28,7 +29,8 @@ Route::middleware('auth:api')->group(function () {
     Route::post('upload', [UploadController::class, 'store']);
     Route::post('role', [UpdateRoleController::class, 'update']);
     Route::post('tracks/delete', [DeleteController::class, 'destroy']);
-    Route::post('playlist', [CreatePlaylistController::class, 'index']);
+    Route::post('playlist', [CreatePlaylistController::class, 'store']);
+    Route::post('playlist/add', [UpdatePlaylistController::class, 'store']);
 });
 
 Route::get('file/{id}', [FileAccessController::class, 'index']);

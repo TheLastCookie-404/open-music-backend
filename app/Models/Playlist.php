@@ -32,16 +32,17 @@ class Playlist extends Model
     public function tracks()
     {
         return $this->belongsToMany(Media::class, 'playlist_tracks')
-                    ->using(PlaylistTrack::class);
+                    ->using(PlaylistTrack::class)
+                    ->withTimestamps();
     }
 
     public function addTrack(string $trackId)
     {
-        $this->belongsToMany(Media::class, 'playlist_tracks')->attach($trackId);
+        $this->tracks()->attach($trackId);
     }
 
     public function removeTrack(string $trackId)
     {
-        $this->belongsToMany(Media::class, 'playlist_tracks')->detach($trackId);
+        $this->tracks()->detach($trackId);
     }
 }

@@ -9,9 +9,9 @@ use Illuminate\Http\Request;
 class CreatePlaylistController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Store a newly created resource in storage.
      */
-    public function index(Request $request)
+    public function store(Request $request)
     {
         $request->validate([
             'name' => 'required|string'

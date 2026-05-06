@@ -12,9 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('playlist_tracks', function (Blueprint $table) {
-            $table->ulid('id')->primary()->unique();
             $table
-                ->foreignUlid('track_id')
+                ->foreignUlid('media_id')
                 ->references('id')
                 ->on('media')
                 ->nullOnDelete();
@@ -23,6 +22,7 @@ return new class extends Migration
                 ->references('id')
                 ->on('playlists')
                 ->nullOnDelete();
+            $table->unique(['playlist_id', 'media_id']);
             $table->integer('order_position')->nullable();
             $table->timestamps();
         });

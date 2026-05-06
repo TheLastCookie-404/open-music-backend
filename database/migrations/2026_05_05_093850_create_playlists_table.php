@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('playlists', function (Blueprint $table) {
-            $table->ulid('id')->primary()->unique();
+            $table->ulid('id')->primary()->unique()->nullable();
             $table
                 ->foreignUlid('user_id')
                 ->references('id')

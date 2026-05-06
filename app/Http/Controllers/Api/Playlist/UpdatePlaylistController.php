@@ -8,43 +8,25 @@ use Illuminate\Http\Request;
 
 class UpdatePlaylistController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
     {
-        //
-    }
+        $request->validate([
+            'playlist_id' => 'required|string|max:32|alpha_num',
+            'track_id' => 'required|string|max:32|alpha_num'
+        ]);
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Playlist $playlist)
-    {
-        //
-    }
+        $trackId = $request->get('track_id');
+        $playlistId = $request->get('playlist_id');
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Playlist $playlist)
-    {
-        //
-    }
+        $playlist = Playlist::findOrFail($playlistId);
+        $playlist->addTrack($trackId);
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Playlist $playlist)
-    {
-        //
+        return response()->json([
+            'message' => 'track added'
+        ]);
     }
 }
