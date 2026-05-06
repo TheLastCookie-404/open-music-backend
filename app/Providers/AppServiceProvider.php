@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Models\Media;
+use App\Models\Playlist;
 use App\Models\User;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
@@ -47,6 +48,13 @@ class AppServiceProvider extends ServiceProvider
 
         Gate::define('get-track', function (?User $user, string $mediaStatus) {
             return \in_array($mediaStatus, self::ROLE_RESTRICTIONS[$user->role ?? 'guest']);
+        });
+
+
+        Gate::define('update-playlist', function (User $user, Playlist $playlist, string $id) {
+            $createdBy = $playlist->where('id', '=', $id)->value('user_id');
+
+            return $user->id === $createdBy;
         });
     }
 }
