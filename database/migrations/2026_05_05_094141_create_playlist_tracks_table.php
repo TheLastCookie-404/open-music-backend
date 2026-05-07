@@ -16,12 +16,12 @@ return new class extends Migration
                 ->foreignUlid('media_id')
                 ->references('id')
                 ->on('media')
-                ->nullOnDelete();
+                ->onDelete('cascade');
             $table
                 ->foreignUlid('playlist_id')
                 ->references('id')
                 ->on('playlists')
-                ->nullOnDelete();
+                ->onDelete('cascade');
             $table->unique(['playlist_id', 'media_id']);
             $table->integer('order_position')->nullable();
             $table->timestamps();

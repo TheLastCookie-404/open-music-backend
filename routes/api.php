@@ -20,6 +20,7 @@ use App\Http\Controllers\Api\Media\
 use App\Http\Controllers\Api\Playlist\
 {
     CreatePlaylistController,
+    PlaylistController,
     UpdatePlaylistController
 };
 
@@ -29,6 +30,9 @@ Route::middleware('auth:api')->group(function () {
     Route::post('upload', [UploadController::class, 'store']);
     Route::post('role', [UpdateRoleController::class, 'update']);
     Route::post('tracks/delete', [DeleteController::class, 'destroy']);
+
+    Route::get('playlists', [PlaylistController::class, 'index']);
+    Route::get('playlist/track', [PlaylistController::class, 'show']);
     Route::post('playlist', [CreatePlaylistController::class, 'store']);
     Route::post('playlist/add', [UpdatePlaylistController::class, 'store']);
 });
