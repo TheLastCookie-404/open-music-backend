@@ -56,5 +56,11 @@ class AppServiceProvider extends ServiceProvider
 
             return $user->id === $createdBy;
         });
+
+        Gate::define('delete-playlist', function (User $user, Playlist $playlist, string $id) {
+            $createdBy = $playlist->where('id', '=', $id)->value('user_id');
+
+            return $user->id === $createdBy;
+        });
     }
 }

@@ -32,4 +32,24 @@ class UpdatePlaylistController extends Controller
             'message' => 'track added'
         ]);
     }
+
+    public function destroy(Request $request, Playlist $playlist)
+    {
+        $request->validate([
+            'playlist_id' => 'required|string|max:32|alpha_num',
+            'track_id' => 'required|string|max:32|alpha_num'
+        ]);
+
+        $trackId = $request->get('track_id');
+        $playlistId = $request->get('playlist_id');
+
+        Gate::authorize('update-playlist', [$playlist, $playlistId]);
+
+        $playlist = Playlist::findOrFail($playlistId);
+        $playlist->removeTrack($trackId);
+
+        return response()->json([
+            'message' => 'track removed'
+        ]);
+    }
 }
