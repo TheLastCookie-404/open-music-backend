@@ -33,7 +33,8 @@ class Playlist extends Model
     {
         return $this->belongsToMany(Media::class, 'playlist_tracks')
                     ->using(PlaylistTrack::class)
-                    ->withTimestamps();
+                    ->withTimestamps()
+                    ->orderByPivot('created_at', 'desc'); // desc is newest added - first
     }
 
     public function addTrack(string $trackId)
