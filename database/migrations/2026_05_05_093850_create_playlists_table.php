@@ -18,11 +18,12 @@ return new class extends Migration
                 ->references('id')
                 ->on('users')
                 ->nullOnDelete();
-            $table->string('name')->unique();
+            $table->string('name');
             $table->string('description')->nullable();
             $table->json('tags')->nullable();
             $table->string('playtime')->nullable();
             $table->float('playtime_seconds')->nullable();
+            $table->unique(['name', 'user_id']);
             $table->timestamps();
         });
     }

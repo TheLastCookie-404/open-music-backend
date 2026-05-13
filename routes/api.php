@@ -8,13 +8,13 @@ use App\Http\Controllers\Api\Auth\
     RefreshController,
     ProfileController,
     LogoutController,
-    UpdateRoleController,
+    RoleController,
 };
 use App\Http\Controllers\Api\Media\
 {
     FileAccessController,
-    DeleteController,
-    UploadController,
+    DeleteTrackController,
+    UploadTrackController,
     TrackController
 };
 use App\Http\Controllers\Api\Playlist\
@@ -26,6 +26,9 @@ use App\Http\Controllers\Api\Playlist\
 };
 
 Route::prefix('/auth')->group(function () {
+    // Route::post('register', [RegisterController::class, 'register']); // Registers new User
+    // Route::post('login', [LoginController::class, 'login']); // Logs User in
+    // Route::post('refresh', [RefreshController::class, 'refresh']); // Refreshes User auth token
     Route::post('register', [RegisterController::class, 'index']); // Registers new User
     Route::post('login', [LoginController::class, 'index']); // Logs User in
     Route::post('refresh', [RefreshController::class, 'index']); // Refreshes User auth token
@@ -41,8 +44,8 @@ Route::prefix('/tracks')->group(function () {
     Route::get('search', [TrackController::class, 'show']); // Gets list of matched tracks
 
     Route::middleware('auth:api')->group(function () {
-        Route::post('/', [UploadController::class, 'store']); // Uploads one track
-        Route::delete('/', [DeleteController::class, 'destroy']); // Deletes one track
+        Route::post('/', [TrackController::class, 'store']); // Uploads one track
+        Route::delete('/', [TrackController::class, 'destroy']); // Deletes one track
     });
 });
 
@@ -54,10 +57,10 @@ Route::prefix('/playlists')->group(function () {
 Route::middleware('auth:api')->group(function () {
 
     Route::prefix('/users')->group(function () {
-        Route::patch('role', [UpdateRoleController::class, 'update']); // Updates User`s role
+        Route::patch('role', [RoleController::class, 'update']); // Updates User`s role
     });
 
-    Route::prefix('/playlists/me')->group(function () {
+    Route::prefix('/playlist/me')->group(function () {
         Route::get('/', [PlaylistController::class, 'index']); // Show list of User`s playlists
         Route::post('/', [CreatePlaylistController::class, 'store']); // Creates playlist
         Route::delete('/', [DeletePlaylistController::class, 'destroy']); // Deletes playlist

@@ -11,7 +11,7 @@ use Exception;
 use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response;
 
-class UpdateRoleController extends AuthController
+class RoleController extends AuthController
 {
     /**
      * Update the specified resource in storage.

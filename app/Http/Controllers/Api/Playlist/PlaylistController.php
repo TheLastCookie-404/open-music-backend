@@ -2,13 +2,11 @@
 
 namespace App\Http\Controllers\Api\Playlist;
 
-use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Controller;
-use App\Models\Playlist;
 use App\Models\User;
 use Illuminate\Http\Request;
 
-class PlaylistController extends AuthController
+class PlaylistController extends Controller
 {
     public function index(User $user) {
         return response()->json([
@@ -19,7 +17,7 @@ class PlaylistController extends AuthController
     /**
      * Display a listing of the resource.
      */
-    public function show(Request $request, User $user)
+    public function show(Request $request)
     {
         $request->validate([
             'playlist_id' => 'required|string|max:32|alpha_num'
