@@ -13,8 +13,6 @@ use App\Http\Controllers\Api\Auth\
 use App\Http\Controllers\Api\Media\
 {
     FileAccessController,
-    DeleteTrackController,
-    UploadTrackController,
     TrackController
 };
 use App\Http\Controllers\Api\Playlist\
@@ -49,6 +47,8 @@ Route::prefix('/tracks')->group(function () {
     });
 });
 
+Route::get('file/{id}', [FileAccessController::class, 'index']); // Gets one track by id
+
 Route::prefix('/playlists')->group(function () {
     Route::get('/', []);
     Route::get('tracks', []);
@@ -60,14 +60,12 @@ Route::middleware('auth:api')->group(function () {
         Route::patch('role', [RoleController::class, 'update']); // Updates User`s role
     });
 
-    Route::prefix('/playlist/me')->group(function () {
+    Route::prefix('/me/playlists')->group(function () {
         Route::get('/', [PlaylistController::class, 'index']); // Show list of User`s playlists
         Route::post('/', [CreatePlaylistController::class, 'store']); // Creates playlist
         Route::delete('/', [DeletePlaylistController::class, 'destroy']); // Deletes playlist
 
         Route::prefix('/tracks')->group(function () {
-            Route::get('file/{id}', [FileAccessController::class, 'index']); // Gets one track by id
-
             Route::get('/', [PlaylistController::class, 'show']); // Show list of User`s tracks in playlist
             Route::post('/', [UpdatePlaylistController::class, 'store']); // Adds new track to playlist
             Route::delete('/', [UpdatePlaylistController::class, 'destroy']); // Removes one track from playlist
