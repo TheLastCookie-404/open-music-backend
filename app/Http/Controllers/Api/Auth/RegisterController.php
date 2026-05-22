@@ -10,8 +10,10 @@ use Symfony\Component\HttpFoundation\Response;
 
 class RegisterController extends AuthController
 {
-    // Register new user
-    public function index(Request $request)
+    /**
+     * Register new user
+     */
+    public function __invoke(Request $request)
     {
         $request->validate([
             'name' => 'required|string|between:1,255',

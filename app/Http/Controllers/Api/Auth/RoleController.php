@@ -14,9 +14,9 @@ use Symfony\Component\HttpFoundation\Response;
 class RoleController extends AuthController
 {
     /**
-     * Update the specified resource in storage.
+     * Update the role
      */
-    public function update(Request $request, User $user)
+    public function __invoke(Request $request, User $user)
     {
         $request->validate([
             'user_id' => 'required|string|alpha_dash|between:6,64',

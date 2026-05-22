@@ -8,8 +8,10 @@ use Illuminate\Support\Facades\Log;
 
 class ProfileController extends AuthController
 {
-    // Get user profile
-    public function show()
+    /** 
+     * Get user profile
+     */
+    public function __invoke()
     {
         return response()->json(auth('api')->user());
     }

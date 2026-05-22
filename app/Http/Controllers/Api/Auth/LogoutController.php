@@ -7,8 +7,10 @@ use PHPOpenSourceSaver\JWTAuth\JWTAuth;
 
 class LogoutController extends AuthController
 {
-    // Logout user (invalidate token)
-    public function index()
+    /** 
+     * Logout user (invalidate token)
+     */
+    public function __invoke()
     {
         /** @disregard P1013 Undefined method (for logout()) */
         auth('api')->logout();

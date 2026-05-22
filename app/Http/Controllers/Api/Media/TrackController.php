@@ -131,7 +131,7 @@ class TrackController extends Controller
         ]);
     }
 
-
+    
 
     private function choosePaginationMethod(mixed $media, ?string $method, int $perPage) 
     {

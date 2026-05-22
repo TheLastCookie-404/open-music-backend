@@ -9,8 +9,10 @@ use Symfony\Component\HttpFoundation\Response;
 
 class LoginController extends AuthController
 {
-    // Login user and return JWT token
-    public function index(Request $request)
+    /** 
+     * Login user and return JWT token
+     */
+    public function __invoke(Request $request)
     {
         $request->validate([
             'email' => 'required|string|email|max:255',

@@ -8,8 +8,10 @@ use Symfony\Component\HttpFoundation\Response;
 
 class RefreshController extends AuthController
 {
-    // Refresh JWT token
-    public function index()
+    /** 
+     * Refresh JWT token
+     */ 
+    public function __invoke()
     {
         try {
             /** @disregard P1013 Undefined method (for refresh()) */

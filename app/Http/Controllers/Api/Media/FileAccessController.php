@@ -16,7 +16,7 @@ class FileAccessController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request, Media $media, $id)
+    public function show(Request $request, Media $media, $id)
     {
         $request->merge(['id' => $id]);
 

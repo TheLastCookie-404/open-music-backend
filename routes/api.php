@@ -16,13 +16,13 @@ use App\Http\Controllers\Api\Auth\
 };
 
 Route::prefix('/auth')->group(function () {
-    Route::post('register', [RegisterController::class, 'index']); // Registers new User
-    Route::post('login', [LoginController::class, 'index']); // Logs User in
-    Route::post('refresh', [RefreshController::class, 'index']); // Refreshes User auth token
+    Route::post('register', RegisterController::class); // Registers new User
+    Route::post('login', LoginController::class); // Logs User in
+    Route::put('refresh', RefreshController::class); // Refreshes User auth token
 
     Route::middleware('auth:api')->group(function () {
-        Route::get('profile', [ProfileController::class, 'show']); // Shows profile of current user
-        Route::post('logout', [LogoutController::class, 'index']); // Logs User out
+        Route::get('profile', ProfileController::class); // Shows profile of current user
+        Route::delete('logout', LogoutController::class); // Logs User out
     });
 });
 
@@ -36,7 +36,7 @@ Route::prefix('/tracks')->group(function () {
     });
 });
 
-Route::get('file/{id}', [FileAccessController::class, 'index']); // Gets one track by id
+Route::get('file/{id}', [FileAccessController::class, 'show']); // Gets one track by id
 
 Route::prefix('/playlists')->group(function () {
     Route::get('/', []);
