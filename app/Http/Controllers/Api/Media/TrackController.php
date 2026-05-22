@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Media;
 use Exception;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\MediaCollection;
+use App\Http\Resources\MediaResource;
 use App\Models\Media;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -31,7 +32,8 @@ class TrackController extends Controller
 
         $trackList = $this->choosePaginationMethod($media, $pagination, 10);
 
-        return new MediaCollection($trackList);
+        // return new MediaCollection($trackList);
+        return $trackList->toResourceCollection();
     }
 
     public function show(Request $request, Media $media)
@@ -56,7 +58,8 @@ class TrackController extends Controller
 
         $trackList = $this->choosePaginationMethod($trackList, $pagination, 10);
 
-        return new MediaCollection($trackList);
+        // return new MediaCollection($trackList);
+        return $trackList->toResourceCollection();
     }
 
     public function store(Request $request) 

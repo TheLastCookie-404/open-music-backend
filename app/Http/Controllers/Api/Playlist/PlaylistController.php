@@ -12,9 +12,7 @@ use Illuminate\Support\Facades\Log;
 class PlaylistController extends Controller
 {
     public function index(User $user) {
-        return response()->json([
-            'playlists' => auth('api')->user()->playlists()->get()
-        ]);
+        return auth('api')->user()->playlists()->paginate(20);
     }
 
     /**

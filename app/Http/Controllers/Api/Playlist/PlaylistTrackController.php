@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Playlist;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\MediaCollection;
 use App\Models\Playlist;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
@@ -21,12 +22,14 @@ class PlaylistTrackController extends Controller
         $playlistId = $request->get('playlist_id');
 
         $playlist = auth('api')->user()->playlists()->findOrFail($playlistId);
+        $trackList = $playlist->tracks()->paginate(20);
 
-        return response()->json([
-            'playlist_id' =>  $playlist->value('id'),
-            'playlist_name' => $playlist->value('name'),
-            'playlist_tracks' => $playlist->tracks()->get()
-        ]);
+        return $trackList->toResourceCollection();
+        // return response()->json([
+        //     'playlist_id' =>  $playlist->value('id'),
+        //     'playlist_name' => $playlist->value('name'),
+        //     'playlist_tracks' => $playlist->tracks()->get()
+        // ]);
     }
     
     /**
