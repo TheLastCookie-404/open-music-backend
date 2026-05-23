@@ -71,7 +71,6 @@ class MediaResource extends JsonResource
             'playtime_seconds' => $this->playtime_seconds,
             'status' => $this->status,
             'artwork_url' => $artworkUrl,
-            // 'audio_url' => $audioUrl,
             'audio_url' => $isUserAccessAllowed ? $audioUrl : null,
             'audio_download_url' => null,
             'file_metadata' => $isExtended === 'yes' && $isUserAccessAllowed ? $fullDataEncoded : null,

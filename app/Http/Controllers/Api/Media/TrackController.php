@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Media;
 
 use Exception;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\PaginatedRequest;
 use App\Http\Resources\MediaCollection;
 use App\Http\Resources\MediaResource;
 use App\Models\Media;
@@ -17,38 +18,27 @@ use Owenoj\LaravelGetId3\GetId3;
 
 class TrackController extends Controller
 {
-    private const PAGINATION_RULES = 'nullable|string|in:cursor,none';
     public const UNIQUE_VIOLATION = '23505';
     public const INTEGRITY_CONSTRAINT_VIOLATION = '23000';
 
 
-    public function index(Request $request, Media $media) 
+    public function index(PaginatedRequest $request, Media $media) 
     {
-        $request->validate([
-            'pagination' => self::PAGINATION_RULES,
-        ]);
-
-        $pagination = $request->get('pagination');
-
-        $trackList = $this->choosePaginationMethod($media, $pagination, 10);
-
-        // return new MediaCollection($trackList);
-        return $trackList->toResourceCollection();
+        $trackList = $request->paginate($media);
+        return MediaResource::collection($trackList);
     }
 
-    public function show(Request $request, Media $media)
+    public function show(PaginatedRequest $request, Media $media)
     {
         $request->validate([
             'title' => 'required_without:artist|nullable|string|max:218|min:1',
             'artist' => 'required_without|nullable|string|max:218|min:1',
-            'pagination' => self::PAGINATION_RULES,
         ]);
 
         $title = $request->get('title');
         $artist = $request->get('artist');
-        $pagination = $request->get('pagination');
 
-        $trackList = $media
+        $trackList = $media::query()
             ->when($title, function($query, $title) {
                return $query->where('title', 'LIKE', "%$title%");
             })
@@ -56,10 +46,10 @@ class TrackController extends Controller
                return $query->orWhere('artist', 'LIKE', "%$artist%");
             });
 
-        $trackList = $this->choosePaginationMethod($trackList, $pagination, 10);
+        $trackList = $request->paginate($trackList);
 
-        // return new MediaCollection($trackList);
-        return $trackList->toResourceCollection();
+        // return $trackList->toResourceCollection();
+        return MediaResource::collection($trackList);
     }
 
     public function store(Request $request) 
@@ -135,17 +125,6 @@ class TrackController extends Controller
     }
 
     
-
-    private function choosePaginationMethod(mixed $media, ?string $method, int $perPage) 
-    {
-        $latest = $media->latest();
-
-        return match ($method) {
-            'none' => $latest->get(),
-            'cursor' => $latest->cursorPaginate($perPage)->withQueryString(),
-            default => $latest->paginate($perPage)->withQueryString(),
-        };
-    }
 
     private function upload(string $id, UploadedFile $file, string $fileName, mixed $artwork, string $artworkFileName)
     {

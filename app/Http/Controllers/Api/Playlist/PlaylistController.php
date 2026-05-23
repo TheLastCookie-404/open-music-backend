@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api\Playlist;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\PaginatedRequest;
+use App\Http\Resources\PlaylistResource;
 use App\Models\User;
 use App\Models\Playlist;
 use Illuminate\Http\Request;
@@ -11,8 +13,9 @@ use Illuminate\Support\Facades\Log;
 
 class PlaylistController extends Controller
 {
-    public function index(User $user) {
-        return auth('api')->user()->playlists()->paginate(20);
+    public function index(PaginatedRequest $request) {
+        $playlists = $request->paginate(auth('api')->user()->playlists());
+        return PlaylistResource::collection($playlists);
     }
 
     /**
