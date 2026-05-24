@@ -31,7 +31,7 @@ class Playlist extends Model
     // All tracks in current playlist
     public function tracks()
     {
-        return $this->belongsToMany(Media::class, 'playlist_tracks')
+        return $this->belongsToMany(Track::class, 'playlist_tracks')
                     ->using(PlaylistTrack::class)
                     ->withTimestamps()
                     ->orderByPivot('created_at', 'desc'); // desc is newest added - first

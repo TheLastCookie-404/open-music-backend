@@ -13,16 +13,16 @@ return new class extends Migration
     {
         Schema::create('playlist_tracks', function (Blueprint $table) {
             $table
-                ->foreignUlid('media_id')
+                ->foreignUlid('track_id')
                 ->references('id')
-                ->on('media')
+                ->on('tracks')
                 ->onDelete('cascade');
             $table
                 ->foreignUlid('playlist_id')
                 ->references('id')
                 ->on('playlists')
                 ->onDelete('cascade');
-            $table->unique(['playlist_id', 'media_id']);
+            $table->unique(['playlist_id', 'track_id']);
             $table->integer('order_position')->nullable();
             $table->timestamps();
         });

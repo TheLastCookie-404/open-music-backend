@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Log;
 use Owenoj\LaravelGetId3\GetId3;
 
 
-class MediaResource extends JsonResource
+class TrackResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -28,7 +28,7 @@ class MediaResource extends JsonResource
         ]);
 
         $isExtended = $request->get('extended');
-        $rootUrl = url("storage/media/$this->id");
+        $rootUrl = url("storage/track/$this->id");
         // $audioUrl = "$rootUrl/$this->audio_filename";
         $audioUrl = url("api/file/$this->id");
         $fileNameDecoded = rawurldecode($this->audio_filename);
@@ -44,7 +44,7 @@ class MediaResource extends JsonResource
         }
 
         try {
-            $metadata = GetId3::fromDiskAndPath('media', "$this->id/$fileNameDecoded");
+            $metadata = GetId3::fromDiskAndPath('track', "$this->id/$fileNameDecoded");
             $fullData = $metadata->extractInfo();
             $fullDataEncoded = mb_convert_encoding($fullData, 'UTF-8');
         } catch (Exception $e) {

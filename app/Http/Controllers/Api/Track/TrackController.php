@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Controllers\Api\Media;
+namespace App\Http\Controllers\Api\Track;
 
 use Exception;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PaginatedRequest;
-use App\Http\Resources\MediaCollection;
-use App\Http\Resources\MediaResource;
-use App\Models\Media;
+use App\Http\Resources\TrackCollection;
+use App\Http\Resources\TrackResource;
+use App\Models\Track;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Gate;
@@ -22,13 +22,13 @@ class TrackController extends Controller
     public const INTEGRITY_CONSTRAINT_VIOLATION = '23000';
 
 
-    public function index(PaginatedRequest $request, Media $media) 
+    public function index(PaginatedRequest $request, Track $track) 
     {
-        $trackList = $request->paginate($media);
-        return MediaResource::collection($trackList);
+        $trackList = $request->paginate($track);
+        return TrackResource::collection($trackList);
     }
 
-    public function show(PaginatedRequest $request, Media $media)
+    public function show(PaginatedRequest $request, Track $track)
     {
         $request->validate([
             'title' => 'required_without:artist|nullable|string|max:218|min:1',
@@ -38,7 +38,7 @@ class TrackController extends Controller
         $title = $request->get('title');
         $artist = $request->get('artist');
 
-        $trackList = $media::query()
+        $trackList = $track::query()
             ->when($title, function($query, $title) {
                return $query->where('title', 'LIKE', "%$title%");
             })
@@ -49,7 +49,7 @@ class TrackController extends Controller
         $trackList = $request->paginate($trackList);
 
         // return $trackList->toResourceCollection();
-        return MediaResource::collection($trackList);
+        return TrackResource::collection($trackList);
     }
 
     public function store(Request $request) 
@@ -96,7 +96,7 @@ class TrackController extends Controller
         ], Response::HTTP_CREATED);
     }
 
-    public function destroy(Request $request, Media $media)
+    public function destroy(Request $request, Track $track)
     {        
         $request->validate([
             'id' => 'required|string|max:32|alpha_num'
@@ -104,15 +104,15 @@ class TrackController extends Controller
 
         $id = $request->get('id');
         
-        $isEntryExists = $media->where('id', '=', $id)->exists();
-        $isDirecoryExists = Storage::disk('media')->exists("$id");
+        $isEntryExists = $track->where('id', '=', $id)->exists();
+        $isDirecoryExists = Storage::disk('track')->exists("$id");
 
         if ($isEntryExists || $isDirecoryExists) {
-            Gate::authorize('delete-track', [$media, $id]);
+            Gate::authorize('delete-track', [$track, $id]);
             
-            $media->where('id', '=', $id)->delete();
-            Storage::disk('media')->deleteDirectory("$id");
-            Storage::disk('public-media')->deleteDirectory("$id");
+            $track->where('id', '=', $id)->delete();
+            Storage::disk('track')->deleteDirectory("$id");
+            Storage::disk('public-track')->deleteDirectory("$id");
         } else {
             return response()->json([
                 "message" => "Track does not exist"
@@ -128,16 +128,16 @@ class TrackController extends Controller
 
     private function upload(string $id, UploadedFile $file, string $fileName, mixed $artwork, string $artworkFileName)
     {
-        Storage::disk('media')->putFileAs($id, $file, $fileName);
+        Storage::disk('track')->putFileAs($id, $file, $fileName);
 
         if($artwork !== null) {
-            Storage::disk('public-media')->putFileAs($id, $artwork, $artworkFileName);
+            Storage::disk('public-track')->putFileAs($id, $artwork, $artworkFileName);
         }
     }
 
     private function storeInDB(GetId3 $metadata, string $fileHash, array $fileUrls)
     {
-        return Media::create([
+        return Track::create([
             'file_hash' => $fileHash,
             'user_id' => auth('api')->user()->id,
             'title' => $metadata->getTitle(),

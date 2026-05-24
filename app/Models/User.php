@@ -38,9 +38,9 @@ class User extends Authenticatable implements JWTSubject
     ];
 
     // All uploaded tracks by user
-    public function media()
+    public function track()
     {
-        return $this->hasMany(Media::class);
+        return $this->hasMany(Track::class);
     }
 
     // All created playlists by user

@@ -1,8 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\Media\FileAccessController;
-use App\Http\Controllers\Api\Media\TrackController;
+use App\Http\Controllers\Api\Track\FileAccessController;
+use App\Http\Controllers\Api\Track\TrackController;
 use App\Http\Controllers\Api\Playlist\PlaylistController;
 use App\Http\Controllers\Api\Playlist\PlaylistTrackController;
 use App\Http\Controllers\Api\Auth\ 
@@ -46,7 +46,7 @@ Route::prefix('/playlists')->group(function () {
 Route::middleware('auth:api')->group(function () {
 
     Route::prefix('/users')->group(function () {
-        Route::patch('role', [RoleController::class, 'update']); // Updates User`s role
+        Route::patch('role', RoleController::class); // Updates User`s role
     });
 
     Route::prefix('/me/playlists')->group(function () {

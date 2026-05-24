@@ -3,7 +3,8 @@
 namespace App\Http\Controllers\Api\Playlist;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\MediaCollection;
+use App\Http\Requests\PaginatedRequest;
+use App\Http\Resources\TrackResource;
 use App\Models\Playlist;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
@@ -13,7 +14,7 @@ class PlaylistTrackController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function show(Request $request)
+    public function show(PaginatedRequest $request)
     {
         $request->validate([
             'playlist_id' => 'required|string|max:32|alpha_num'
@@ -22,9 +23,9 @@ class PlaylistTrackController extends Controller
         $playlistId = $request->get('playlist_id');
 
         $playlist = auth('api')->user()->playlists()->findOrFail($playlistId);
-        $trackList = $playlist->tracks()->paginate(20);
+        $trackList = $request->paginate($playlist->tracks());
 
-        return $trackList->toResourceCollection();
+        return TrackResource::collection($trackList);
         // return response()->json([
         //     'playlist_id' =>  $playlist->value('id'),
         //     'playlist_name' => $playlist->value('name'),

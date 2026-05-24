@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use App\Models\Media;
+use App\Models\Track;
 use App\Models\Playlist;
 use App\Models\User;
 use Illuminate\Support\Facades\Gate;
@@ -31,8 +31,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Gate::define('delete-track', function (User $user, Media $media, string $id) {
-            $uploadedById = $media->where('id', '=', $id)->value('user_id');
+        Gate::define('delete-track', function (User $user, Track $track, string $id) {
+            $uploadedById = $track->where('id', '=', $id)->value('user_id');
             
             return $user->id === $uploadedById || $user->role === 'superadmin';
         });
@@ -46,8 +46,8 @@ class AppServiceProvider extends ServiceProvider
             return $user->role === 'superadmin';
         });
 
-        Gate::define('get-track', function (?User $user, string $mediaStatus) {
-            return \in_array($mediaStatus, self::ROLE_RESTRICTIONS[$user->role ?? 'guest']);
+        Gate::define('get-track', function (?User $user, string $trackStatus) {
+            return \in_array($trackStatus, self::ROLE_RESTRICTIONS[$user->role ?? 'guest']);
         });
 
 

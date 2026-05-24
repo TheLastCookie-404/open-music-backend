@@ -47,19 +47,19 @@ return [
             'report' => false,
         ],
 
-        'public-media' => [
+        'public-track' => [
             'driver' => 'local',
-            'root' => storage_path('app/public/media'),
-            'url' => env('APP_URL').'/storage/media',
+            'root' => storage_path('app/public/track'),
+            'url' => env('APP_URL').'/storage/track',
             'visibility' => 'public',
             'throw' => false,
             'report' => false,
         ],
 
-        'media' => [
+        'track' => [
             'driver' => 'local',
-            'root' => storage_path('app/private/media'),
-            'url' => env('APP_URL').'/storage/media',
+            'root' => storage_path('app/private/track'),
+            'url' => env('APP_URL').'/storage/track',
             'visibility' => 'private',
             'throw' => false,
             'report' => false,

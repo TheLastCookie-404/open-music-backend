@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\Api\Media;
+namespace App\Http\Controllers\Api\Track;
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Controller;
-use App\Models\Media;
+use App\Models\Track;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
@@ -16,7 +16,7 @@ class FileAccessController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function show(Request $request, Media $media, $id)
+    public function show(Request $request, Track $track, $id)
     {
         $request->merge(['id' => $id]);
 
@@ -26,14 +26,14 @@ class FileAccessController extends Controller
 
         $id = $request->get('id');
 
-        $track = $media->whereId($id);
+        $track = $track->whereId($id);
         $trackStatus = $track->value('status');
         $fileName = $track->value('audio_filename');
         $fileName = rawurldecode($fileName);
 
         Gate::authorize('get-track', [$trackStatus]);
         
-        $file = Storage::disk('media')->path("$id/$fileName");
+        $file = Storage::disk('track')->path("$id/$fileName");
 
         if (auth('api')->check()) {
             Log::info(auth('api')->user()->name . ' now listens: ' . $track->value('title') . ' - ' . $track->value('artist'));

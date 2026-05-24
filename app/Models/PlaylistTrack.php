@@ -24,6 +24,6 @@ class PlaylistTrack extends Pivot
 
     public function track()
     {
-        return $this->belongsTo(Media::class);    
+        return $this->belongsTo(Track::class);    
     }
 }
