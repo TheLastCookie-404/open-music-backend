@@ -4,23 +4,42 @@ namespace App\Http\Controllers\Api\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use Illuminate\Http\Request;
+use PHPOpenSourceSaver\JWTAuth\Exceptions\JWTException;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use Symfony\Component\HttpFoundation\Response;
 
 class SendCodeController extends Controller
 {
-    public function __invoke(Request $request)
+    public function __invoke()
     {
-        $request->validate([
-            'email' => 'required|email:rfc,dns,strict|between:5,255',
+        $verificationToken = (string) random_int(100000, 999999);
+
+        try {
+            $user = auth('api')->user();
+            $userId = $user->id;
+            $email = $user->email;
+
+            User::whereId($userId)->update([
+                'verification_token' => $verificationToken
+            ]);
+
+            Log::info($user->remember_token);
+            
+            Mail::raw($verificationToken, function ($message) use ($email) {
+                $message
+                    ->to($email)
+                    ->subject('Laravel');
+            });
+        }
+        catch (JWTException $e) {
+            return response()->json([
+                'error' => $e->getMessage(),
+            ], Response::HTTP_UNAUTHORIZED);
+        }
+
+        return response()->json([
+            'message' => 'verification code was sent'
         ]);
-
-        $email = $request->get('email');
-
-        Mail::raw('Test!', function ($message) use ($email) {
-            $message
-                ->to($email)
-                ->subject('Laravel');
-        });
     }
 }

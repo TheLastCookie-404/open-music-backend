@@ -52,7 +52,7 @@ class RoleController extends AuthController
             Log::error($e);
 
             return response()->json([
-                'message' => "server error",
+                'message' => 'server error',
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
