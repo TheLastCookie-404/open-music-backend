@@ -7,20 +7,20 @@ use App\Http\Controllers\Api\Playlist\PlaylistController;
 use App\Http\Controllers\Api\Playlist\PlaylistTrackController;
 use App\Http\Controllers\Api\Auth\ 
 {
-    ConfirmationController,
     RegisterController,
     LoginController,
     RefreshController,
     ProfileController,
     LogoutController,
     RoleController,
+    SendCodeController,
 };
 
 Route::prefix('/auth')->group(function () {
     Route::post('register', RegisterController::class); // Registers new User
     Route::post('login', LoginController::class); // Logs User in
     Route::put('refresh', RefreshController::class); // Refreshes User auth token
-    Route::post('confirm', ConfirmationController::class);
+    Route::post('confirm', SendCodeController::class);
 
     Route::middleware('auth:api')->group(function () {
         Route::get('profile', ProfileController::class); // Shows profile of current user
