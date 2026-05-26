@@ -104,13 +104,13 @@ class TrackController extends Controller
 
         $id = $request->get('id');
         
-        $isEntryExists = $track->where('id', '=', $id)->exists();
+        $isEntryExists = $track->whereId($id)->exists();
         $isDirecoryExists = Storage::disk('track')->exists("$id");
 
         if ($isEntryExists || $isDirecoryExists) {
             Gate::authorize('delete-track', [$track, $id]);
             
-            $track->where('id', '=', $id)->delete();
+            $track->whereId($id)->delete();
             Storage::disk('track')->deleteDirectory("$id");
             Storage::disk('public-track')->deleteDirectory("$id");
         } else {

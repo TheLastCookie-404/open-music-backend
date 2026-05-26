@@ -32,7 +32,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Gate::define('delete-track', function (User $user, Track $track, string $id) {
-            $uploadedById = $track->where('id', '=', $id)->value('user_id');
+            $uploadedById = $track->whereId($id)->value('user_id');
             
             return $user->id === $uploadedById || $user->role === 'superadmin';
         });
@@ -52,13 +52,13 @@ class AppServiceProvider extends ServiceProvider
 
 
         Gate::define('update-playlist', function (User $user, Playlist $playlist, string $id) {
-            $createdBy = $playlist->where('id', '=', $id)->value('user_id');
+            $createdBy = $playlist->whereId($id)->value('user_id');
 
             return $user->id === $createdBy;
         });
 
         Gate::define('delete-playlist', function (User $user, Playlist $playlist, string $id) {
-            $createdBy = $playlist->where('id', '=', $id)->value('user_id');
+            $createdBy = $playlist->whereId($id)->value('user_id');
 
             return $user->id === $createdBy;
         });
