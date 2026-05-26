@@ -12,7 +12,7 @@ class ConfirmController extends Controller
     public function __invoke(Request $request)
     {
         $request->validate([
-            'code' => 'required|integer|digits:6'
+            'code' => 'required|digits:6'
         ]);
 
         $user = auth('api')->user();

@@ -82,17 +82,17 @@ class TrackController extends Controller
 
             if ($e->getCode() === self::UNIQUE_VIOLATION || $e->getCode() === self::INTEGRITY_CONSTRAINT_VIOLATION) {
                 return response()->json([
-                    'message' => 'Track already exists',
+                    'message' => 'track already exists',
                 ], Response::HTTP_CONFLICT);
             }
 
             return response()->json([
-                'message' => 'Track uploading failed',
+                'message' => 'track uploading failed',
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         return response()->json([
-            'message' => 'Uploaded',
+            'message' => 'uploaded',
         ], Response::HTTP_CREATED);
     }
 
@@ -115,12 +115,12 @@ class TrackController extends Controller
             Storage::disk('public-track')->deleteDirectory("$id");
         } else {
             return response()->json([
-                "message" => "Track does not exist"
+                "message" => "track does not exist"
             ], Response::HTTP_NOT_FOUND);
         }
 
         return response()->json([
-            "message" => "Deleted"
+            "message" => "track deleted"
         ]);
     }
 

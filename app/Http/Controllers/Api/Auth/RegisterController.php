@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api\Auth;
 use App\Http\Controllers\Api\AuthController;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response;
 
 class RegisterController extends AuthController
@@ -33,9 +33,19 @@ class RegisterController extends AuthController
             'password' => bcrypt($password)
         ]);
 
-        return response()->json([
-            'message' => 'User registered successfully', 
+        $credentials = $request->only('email', 'password');
+
+        /** @disregard P1013 Undefined method (for attempt()) */
+        if (!$token = auth('api')->attempt($credentials)) {
+            Log::info('register auto authorization failed');
+        }
+
+        return $this->respondWithToken($token, [
+            'message' => 'user registered successfully', 
             'user' => $user
-        ], Response::HTTP_CREATED);
+        ])->cookie(
+            'token', $token, config('jwt.refresh_ttl'), // Expires in 1 day
+            '/', null, true, true, false // path, domain, secure, httpOnly, raw, sameSite
+        );
     }
 }

@@ -20,11 +20,11 @@ use App\Http\Controllers\Api\Auth\
 Route::prefix('/auth')->group(function () {
     Route::post('register', RegisterController::class); // Registers new User
     Route::post('login', LoginController::class); // Logs User in
-    Route::post('send-code', SendCodeController::class);
-    Route::post('confirm-email', ConfirmController::class); 
     Route::put('refresh', RefreshController::class); // Refreshes User auth token
 
     Route::middleware('auth:api')->group(function () {
+        Route::post('send-code', SendCodeController::class);
+        Route::post('confirm-email', ConfirmController::class); 
         Route::get('profile', ProfileController::class); // Shows profile of current user
         Route::delete('logout', LogoutController::class); // Logs User out
     });

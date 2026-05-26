@@ -15,6 +15,6 @@ class LogoutController extends AuthController
         /** @disregard P1013 Undefined method (for logout()) */
         auth('api')->logout();
 
-        return response()->json(['message' => 'Successfully logged out']);
+        return response()->json(['message' => 'successfully logged out']);
     }
 }

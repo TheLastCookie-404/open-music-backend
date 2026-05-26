@@ -23,7 +23,7 @@ class LoginController extends AuthController
 
         /** @disregard P1013 Undefined method (for attempt()) */
         if (!$token = auth('api')->attempt($credentials)) {
-            return response()->json(['error' => 'Unauthorized'], Response::HTTP_UNAUTHORIZED);
+            return response()->json(['error' => 'unauthorized'], Response::HTTP_UNAUTHORIZED);
         }
 
         // return $this->respondWithToken($token);
