@@ -21,7 +21,7 @@ class LoginController extends AuthController
         
         $credentials = $request->only('email', 'password');
 
-        if (auth('api')->user()) {
+        if (auth('api')->user()->email === $credentials['email']) {
             return response()->json([
                 'message' => 'user already logged in'
             ]);
