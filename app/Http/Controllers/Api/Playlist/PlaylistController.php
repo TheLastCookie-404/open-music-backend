@@ -10,12 +10,19 @@ use App\Models\Playlist;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
+use Symfony\Component\HttpFoundation\Response;
 
 class PlaylistController extends Controller
 {
-    public function index(PaginatedRequest $request) {
+    public function index(PaginatedRequest $request) 
+    {
         $playlists = $request->paginate(auth('api')->user()->playlists());
-        return PlaylistResource::collection($playlists);
+        $payload = PlaylistResource::collection($playlists)->response()->getData(true);
+
+        return response()->json([
+            'message' => 'Playlists',
+            ...$payload
+        ], Response::HTTP_OK);
     }
 
     /**
@@ -35,9 +42,9 @@ class PlaylistController extends Controller
         ]);
 
         return response()->json([            
-            'message' => 'created',
-            'playlist' => $playlist
-        ]);
+            'message' => 'Playlist created',
+            'data' => $playlist
+        ], Response::HTTP_CREATED);
     }
 
     /**
@@ -58,7 +65,7 @@ class PlaylistController extends Controller
         $playlist->destroy($playlistId);
 
         return response()->json([
-            'message' => 'playlist deleted'
-        ]);
+            'message' => 'Playlist deleted'
+        ], Response::HTTP_OK);
     }
 }

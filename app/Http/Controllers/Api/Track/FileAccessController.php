@@ -43,6 +43,5 @@ class FileAccessController extends Controller
         BinaryFileResponse::trustXSendfileTypeHeader();
 
         return $response;
-        // return response()->file($file);
     }
 }

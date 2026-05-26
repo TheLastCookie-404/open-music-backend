@@ -8,6 +8,7 @@ use App\Http\Resources\TrackResource;
 use App\Models\Playlist;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use Symfony\Component\HttpFoundation\Response;
 
 class PlaylistTrackController extends Controller
 {
@@ -24,13 +25,13 @@ class PlaylistTrackController extends Controller
 
         $playlist = auth('api')->user()->playlists()->findOrFail($playlistId);
         $trackList = $request->paginate($playlist->tracks());
+        $payload = TrackResource::collection($trackList)->response()->getData(true);
 
-        return TrackResource::collection($trackList);
-        // return response()->json([
-        //     'playlist_id' =>  $playlist->value('id'),
-        //     'playlist_name' => $playlist->value('name'),
-        //     'playlist_tracks' => $playlist->tracks()->get()
-        // ]);
+        return response()->json([
+            'success' => true,
+            'message' => 'Playlist tracks',
+            ...$payload
+        ], Response::HTTP_OK);
     }
     
     /**
@@ -52,8 +53,8 @@ class PlaylistTrackController extends Controller
         $playlist->addTrack($trackId);
 
         return response()->json([
-            'message' => 'track added'
-        ]);
+            'message' => 'Track added'
+        ], Response::HTTP_CREATED);
     }
 
     public function destroy(Request $request, Playlist $playlist)
@@ -72,7 +73,7 @@ class PlaylistTrackController extends Controller
         $playlist->removeTrack($trackId);
 
         return response()->json([
-            'message' => 'track removed'
-        ]);
+            'message' => 'Track removed'
+        ], Response::HTTP_OK);
     }
 }

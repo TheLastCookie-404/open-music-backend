@@ -13,20 +13,14 @@ class RefreshController extends AuthController
      */ 
     public function __invoke()
     {
-        try {
-            /** @disregard P1013 Undefined method (for refresh()) */
-            $token = auth('api')->refresh();
-        }
-        catch (JWTException $e) {
-            return response()->json([
-                'error' => $e->getMessage(),
-            ], Response::HTTP_UNAUTHORIZED);
-        }
+        /** @disregard P1013 Undefined method (for refresh()) */
+        $token = auth('api')->refresh();
 
-        return $this->respondWithToken($token)
-            ->cookie(
-                'token', $token, 60 * 24, // Expires in 1 day
-                '/', null, true, true, false // path, domain, secure, httpOnly, raw, sameSite
-            );
+        return $this->respondWithToken($token, [
+            'message' => 'Token refreshed'
+        ], Response::HTTP_OK)->cookie(
+            'token', $token, 60 * 24, // Expires in 1 day
+            '/', null, true, true, false // path, domain, secure, httpOnly, raw, sameSite
+        );
     }
 }

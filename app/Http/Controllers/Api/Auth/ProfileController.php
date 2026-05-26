@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api\Auth;
 
 use App\Http\Controllers\Api\AuthController;
+use Symfony\Component\HttpFoundation\Response;
+
 class ProfileController extends AuthController
 {
     /** 
@@ -10,6 +12,9 @@ class ProfileController extends AuthController
      */
     public function __invoke()
     {
-        return response()->json(auth('api')->user());
+        return response()->json([
+            'message' => 'User profile',
+            'data' => auth('api')->user()
+        ], Response::HTTP_OK);
     }
 }

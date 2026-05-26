@@ -25,7 +25,12 @@ class TrackController extends Controller
     public function index(PaginatedRequest $request, Track $track) 
     {
         $trackList = $request->paginate($track);
-        return TrackResource::collection($trackList);
+        $payload = TrackResource::collection($trackList)->response()->getData(true);
+
+        return response()->json([
+            'message' => 'Tracks',
+            ...$payload
+        ], Response::HTTP_OK);
     }
 
     public function show(PaginatedRequest $request, Track $track)
@@ -47,9 +52,12 @@ class TrackController extends Controller
             });
 
         $trackList = $request->paginate($trackList);
+        $payload = TrackResource::collection($trackList)->response()->getData(true);
 
-        // return $trackList->toResourceCollection();
-        return TrackResource::collection($trackList);
+        return response()->json([
+            'message' => 'Tracks',
+            ...$payload
+        ], Response::HTTP_OK);
     }
 
     public function store(Request $request) 
@@ -82,17 +90,17 @@ class TrackController extends Controller
 
             if ($e->getCode() === self::UNIQUE_VIOLATION || $e->getCode() === self::INTEGRITY_CONSTRAINT_VIOLATION) {
                 return response()->json([
-                    'message' => 'track already exists',
+                    'message' => 'Track already exists',
                 ], Response::HTTP_CONFLICT);
             }
 
             return response()->json([
-                'message' => 'track uploading failed',
+                'message' => 'Track uploading failed',
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         return response()->json([
-            'message' => 'uploaded',
+            'message' => 'Track uploaded',
         ], Response::HTTP_CREATED);
     }
 
@@ -115,13 +123,13 @@ class TrackController extends Controller
             Storage::disk('public-track')->deleteDirectory("$id");
         } else {
             return response()->json([
-                "message" => "track does not exist"
+                "message" => "Track does not exist"
             ], Response::HTTP_NOT_FOUND);
         }
 
         return response()->json([
-            "message" => "track deleted"
-        ]);
+            "message" => "Track deleted"
+        ], Response::HTTP_OK);
     }
 
     

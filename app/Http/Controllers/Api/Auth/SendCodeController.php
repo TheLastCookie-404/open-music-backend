@@ -32,7 +32,7 @@ class SendCodeController extends Controller
         });
 
         return response()->json([
-            'message' => 'verification code was sent'
-        ]);
+            'message' => 'Verification code was sent'
+        ], Response::HTTP_OK);
     }
 }

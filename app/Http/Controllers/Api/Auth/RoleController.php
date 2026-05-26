@@ -32,28 +32,21 @@ class RoleController extends AuthController
         $userName = $user->value('name');
         $userRole = $user->value('role');
 
-        try {
-            Log::info("Current user`s role: $userRole, Incoming role: $role");
+        Log::info("Current user`s role: $userRole, Incoming role: $role");
 
-            if ($userRole === $role)
-                return response()->json([
-                    'message' => "$userName`s role was already applied"
-                ]);
-
-            $user->update([
-                'role' => $role
-            ]);
-
+        if ($userRole === $role) {
             return response()->json([
-                'message' => "$userName`s role changed",
-            ], Response::HTTP_ACCEPTED);
-
-        } catch (Exception $e) {
-            Log::error($e);
-
-            return response()->json([
-                'message' => 'server error',
-            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+                'message' => "$userName`s role was already applied"
+            ], Response::HTTP_CONFLICT);
         }
+
+        $user->update([
+            'role' => $role
+        ]);
+
+        return response()->json([
+            'message' => "$userName`s role changed",
+        ], Response::HTTP_ACCEPTED);
+
     }
 }

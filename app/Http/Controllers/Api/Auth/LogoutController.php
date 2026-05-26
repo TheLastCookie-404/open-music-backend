@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Auth;
 
 use App\Http\Controllers\Api\AuthController;
 use PHPOpenSourceSaver\JWTAuth\JWTAuth;
+use Symfony\Component\HttpFoundation\Response;
 
 class LogoutController extends AuthController
 {
@@ -15,6 +16,8 @@ class LogoutController extends AuthController
         /** @disregard P1013 Undefined method (for logout()) */
         auth('api')->logout();
 
-        return response()->json(['message' => 'successfully logged out']);
+        return response()->json([
+            'message' => 'Successfully logged out'
+        ], Response::HTTP_OK);
     }
 }

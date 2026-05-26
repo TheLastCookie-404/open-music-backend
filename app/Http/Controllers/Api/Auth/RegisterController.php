@@ -41,9 +41,9 @@ class RegisterController extends AuthController
         }
 
         return $this->respondWithToken($token, [
-            'message' => 'user registered successfully', 
-            'user' => $user
-        ])->cookie(
+            'message' => 'User registered successfully', 
+            'data' => $user
+        ], Response::HTTP_CREATED)->cookie(
             'token', $token, config('jwt.refresh_ttl'), // Expires in 1 day
             '/', null, true, true, false // path, domain, secure, httpOnly, raw, sameSite
         );

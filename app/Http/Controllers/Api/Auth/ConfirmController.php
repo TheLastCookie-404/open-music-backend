@@ -21,14 +21,14 @@ class ConfirmController extends Controller
 
         if ($code !== $verificationToken) {
             return response()->json([
-                'message' => 'email was not confirmed'
+                'message' => 'Email was not confirmed'
             ], Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
         $user->markEmailAsVerified();
 
         return response()->json([
-            'message' => 'email verified'
+            'message' => 'Email verified'
         ], Response::HTTP_ACCEPTED);
     }
 }

@@ -20,23 +20,27 @@ class LoginController extends AuthController
         ]);
         
         $credentials = $request->only('email', 'password');
+        $user = auth('api')->user();
 
-        if (auth('api')->user()->email === $credentials['email']) {
+        if ($user->email ?? false === $credentials['email']) {
             return response()->json([
-                'message' => 'user already logged in'
-            ]);
+                'message' => 'User already logged in'
+            ], Response::HTTP_CONFLICT);
         }
 
         /** @disregard P1013 Undefined method (for attempt()) */
         if (!$token = auth('api')->attempt($credentials)) {
-            return response()->json(['error' => 'unauthorized'], Response::HTTP_UNAUTHORIZED);
+            return response()->json([
+                'message' => 'Unauthorized'
+            ], Response::HTTP_UNAUTHORIZED);
         }
 
         // return $this->respondWithToken($token);
-        return $this->respondWithToken($token)
-            ->cookie(
-                'token', $token, config('jwt.refresh_ttl'), // Expires in 1 day
-                '/', null, true, true, false // path, domain, secure, httpOnly, raw, sameSite
-            );
+        return $this->respondWithToken($token, [
+            'message' => 'Logged in',
+        ], Response::HTTP_ACCEPTED)->cookie(
+            'token', $token, config('jwt.refresh_ttl'), // Expires in 1 day
+            '/', null, true, true, false // path, domain, secure, httpOnly, raw, sameSite
+        );
     }
 }
