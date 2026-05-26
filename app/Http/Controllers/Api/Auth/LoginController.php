@@ -21,6 +21,12 @@ class LoginController extends AuthController
         
         $credentials = $request->only('email', 'password');
 
+        if (auth('api')->user()) {
+            return response()->json([
+                'message' => 'user already logged in'
+            ]);
+        }
+
         /** @disregard P1013 Undefined method (for attempt()) */
         if (!$token = auth('api')->attempt($credentials)) {
             return response()->json(['error' => 'unauthorized'], Response::HTTP_UNAUTHORIZED);
