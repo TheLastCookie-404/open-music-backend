@@ -25,12 +25,10 @@ class TrackController extends Controller
     public function index(PaginatedRequest $request, Track $track) 
     {
         $trackList = $request->paginate($track);
-        $payload = TrackResource::collection($trackList)->response()->getData(true);
 
-        return response()->json([
+        return TrackResource::collection($trackList)->additional([
             'message' => 'Tracks',
-            ...$payload
-        ], Response::HTTP_OK);
+        ]);
     }
 
     public function show(PaginatedRequest $request, Track $track)
@@ -52,12 +50,16 @@ class TrackController extends Controller
             });
 
         $trackList = $request->paginate($trackList);
-        $payload = TrackResource::collection($trackList)->response()->getData(true);
+        // $payload = TrackResource::collection($trackList)->response()->getData(true);
 
-        return response()->json([
+        // return response()->json([
+        //     'message' => 'Tracks',
+        //     ...$payload
+        // ], Response::HTTP_OK);
+
+        return TrackResource::collection($trackList)->additional([
             'message' => 'Tracks',
-            ...$payload
-        ], Response::HTTP_OK);
+        ]);
     }
 
     public function store(Request $request) 

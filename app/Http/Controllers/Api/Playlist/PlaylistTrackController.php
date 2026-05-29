@@ -25,13 +25,10 @@ class PlaylistTrackController extends Controller
 
         $playlist = auth('api')->user()->playlists()->findOrFail($playlistId);
         $trackList = $request->paginate($playlist->tracks());
-        $payload = TrackResource::collection($trackList)->response()->getData(true);
 
-        return response()->json([
-            'success' => true,
+        return TrackResource::collection($trackList)->additional([
             'message' => 'Playlist tracks',
-            ...$payload
-        ], Response::HTTP_OK);
+        ]);
     }
     
     /**

@@ -17,12 +17,10 @@ class PlaylistController extends Controller
     public function index(PaginatedRequest $request) 
     {
         $playlists = $request->paginate(auth('api')->user()->playlists());
-        $payload = PlaylistResource::collection($playlists)->response()->getData(true);
 
-        return response()->json([
+        return PlaylistResource::collection($playlists)->additional([
             'message' => 'Playlists',
-            ...$payload
-        ], Response::HTTP_OK);
+        ]);
     }
 
     /**
