@@ -8,9 +8,14 @@ use PHPOpenSourceSaver\JWTAuth\Exceptions\JWTException;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Symfony\Component\HttpFoundation\Response;
+use Dedoc\Scramble\Attributes\Group;
 
+#[Group('Auth')]
 class SendCodeController extends Controller
 {
+    /**
+     * Send verification code
+     */
     public function __invoke()
     {
         $verificationToken = (string) random_int(100000, 999999);

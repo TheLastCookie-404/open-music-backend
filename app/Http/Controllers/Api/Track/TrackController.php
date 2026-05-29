@@ -15,13 +15,18 @@ use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Response;
 use Owenoj\LaravelGetId3\GetId3;
+use Dedoc\Scramble\Attributes\Group;
 
+#[Group('Track')]
 class TrackController extends Controller
 {
     public const UNIQUE_VIOLATION = '23505';
     public const INTEGRITY_CONSTRAINT_VIOLATION = '23000';
 
 
+    /**
+     * Display list of Tracks
+     */
     public function index(PaginatedRequest $request, Track $track) 
     {
         $trackList = $request->paginate($track);
@@ -31,6 +36,9 @@ class TrackController extends Controller
         ]);
     }
 
+    /**
+     * Display list of searched Tracks
+     */
     public function show(PaginatedRequest $request, Track $track)
     {
         $request->validate([
@@ -50,18 +58,15 @@ class TrackController extends Controller
             });
 
         $trackList = $request->paginate($trackList);
-        // $payload = TrackResource::collection($trackList)->response()->getData(true);
-
-        // return response()->json([
-        //     'message' => 'Tracks',
-        //     ...$payload
-        // ], Response::HTTP_OK);
 
         return TrackResource::collection($trackList)->additional([
             'message' => 'Tracks',
         ]);
     }
 
+    /**
+     * Upload track
+     */
     public function store(Request $request) 
     {
         $request->validate([
@@ -106,6 +111,9 @@ class TrackController extends Controller
         ], Response::HTTP_CREATED);
     }
 
+    /**
+     * Delete track
+     */
     public function destroy(Request $request, Track $track)
     {        
         $request->validate([

@@ -10,11 +10,13 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Dedoc\Scramble\Attributes\Group;
 
+#[Group('Track')]
 class FileAccessController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * File access
      */
     public function show(Request $request, Track $track, $id)
     {

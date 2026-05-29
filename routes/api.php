@@ -42,10 +42,10 @@ Route::prefix('/tracks')->group(function () {
 
 Route::get('file/{id}', [FileAccessController::class, 'show']); // Gets one track by id
 
-Route::prefix('/playlists')->group(function () {
-    Route::get('/', []);
-    Route::get('tracks', []);
-});
+// Route::prefix('/playlists')->group(function () {
+//     Route::get('/', []);
+//     Route::get('tracks', []);
+// });
 
 Route::middleware('auth:api')->group(function () {
 

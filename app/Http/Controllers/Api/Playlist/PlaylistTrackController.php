@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\Response;
 class PlaylistTrackController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display list of playlist tracks
      */
     public function show(PaginatedRequest $request)
     {
@@ -32,7 +32,7 @@ class PlaylistTrackController extends Controller
     }
     
     /**
-     * Store a newly created resource in storage.
+     * Upload new track to playlist
      */
     public function store(Request $request, Playlist $playlist)
     {
@@ -54,6 +54,9 @@ class PlaylistTrackController extends Controller
         ], Response::HTTP_CREATED);
     }
 
+    /**
+     * Remove track from playlist
+     */
     public function destroy(Request $request, Playlist $playlist)
     {
         $request->validate([

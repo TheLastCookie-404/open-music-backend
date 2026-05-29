@@ -10,7 +10,9 @@ use Illuminate\Support\Facades\Gate;
 use Exception;
 use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response;
+use Dedoc\Scramble\Attributes\Group;
 
+#[Group('Auth')]
 class RoleController extends AuthController
 {
     /**

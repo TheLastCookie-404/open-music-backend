@@ -14,6 +14,9 @@ use Symfony\Component\HttpFoundation\Response;
 
 class PlaylistController extends Controller
 {
+    /**
+     * Display list of playlists
+     */
     public function index(PaginatedRequest $request) 
     {
         $playlists = $request->paginate(auth('api')->user()->playlists());
@@ -24,7 +27,7 @@ class PlaylistController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Create new playlist
      */
     public function store(Request $request)
     {
@@ -46,7 +49,7 @@ class PlaylistController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Delete playlist
      */
     public function destroy(Request $request, Playlist $playlist)
     {
