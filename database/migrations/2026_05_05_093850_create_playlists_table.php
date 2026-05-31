@@ -18,6 +18,8 @@ return new class extends Migration
                 ->references('id')
                 ->on('users')
                 ->nullOnDelete();
+            $table->enum('type', ['standart', 'likes'])->default('standart');
+            $table->enum('visibility', ['public', 'private', 'friends'])->default('public');
             $table->string('name');
             $table->string('description')->nullable();
             $table->json('tags')->nullable();

@@ -16,6 +16,7 @@ use App\Http\Controllers\Api\Auth\
     RoleController,
     SendCodeController,
 };
+use App\Http\Controllers\Api\Playlist\LikeController;
 
 Route::prefix('/auth')->group(function () {
     Route::post('register', RegisterController::class); // Registers new User
@@ -53,15 +54,23 @@ Route::middleware('auth:api')->group(function () {
         Route::patch('role', RoleController::class); // Updates User`s role
     });
 
-    Route::prefix('/me/playlists')->group(function () {
-        Route::get('/', [PlaylistController::class, 'index']); // Show list of User`s playlists
-        Route::post('/', [PlaylistController::class, 'store']); // Creates playlist
-        Route::delete('/', [PlaylistController::class, 'destroy']); // Deletes playlist
+    Route::prefix('/me')->group(function () {
+        Route::prefix('/playlists')->group(function () {
+            Route::get('/', [PlaylistController::class, 'index']); // Show list of User`s playlists
+            Route::post('/', [PlaylistController::class, 'store']); // Creates playlist
+            Route::delete('/', [PlaylistController::class, 'destroy']); // Deletes playlist
 
-        Route::prefix('/tracks')->group(function () {
-            Route::get('/', [PlaylistTrackController::class, 'show']); // Show list of User`s tracks in playlist
-            Route::post('/', [PlaylistTrackController::class, 'store']); // Adds new track to playlist
-            Route::delete('/', [PlaylistTrackController::class, 'destroy']); // Removes one track from playlist
+            Route::prefix('/tracks')->group(function () {
+                Route::get('/', [PlaylistTrackController::class, 'show']); // Show list of User`s tracks in playlist
+                Route::post('/', [PlaylistTrackController::class, 'store']); // Adds new track to playlist
+                Route::delete('/', [PlaylistTrackController::class, 'destroy']); // Removes one track from playlist
+            });
+
+            Route::prefix('/likes')->group(function () {
+                Route::get('/', [LikeController::class, 'index']); // Show list of User`s tracks in likes playlist
+                Route::post('/', [LikeController::class, 'store']); // Adds new track to likes playlist
+                Route::delete('/', [LikeController::class, 'destroy']); // Removes one track from likes playlist
+            });
         });
     });
 });

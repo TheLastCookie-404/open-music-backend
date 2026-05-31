@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Auth;
 
 use App\Http\Controllers\Api\AuthController;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response;
@@ -24,7 +25,7 @@ class LoginController extends AuthController
         $credentials = $request->only('email', 'password');
         $user = auth('api')->user();
 
-        if ($user->email ?? false === $credentials['email']) {
+        if (($user->email ?? false) === $credentials['email']) {
             return response()->json([
                 'message' => 'User already logged in'
             ], Response::HTTP_CONFLICT);

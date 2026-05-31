@@ -44,12 +44,16 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasMany(Track::class);
     }
 
-    // All created playlists by user
+    public function likedTracks()
+    {
+        return $this->hasOne(Playlist::class)->where('type', '=', 'likes')->first();
+    }
+
+    // All user playlists
     public function playlists() 
     {
         return $this->hasMany(Playlist::class);
     }
-    
 
     public function getJWTIdentifier()
     {
