@@ -21,7 +21,7 @@ use App\Http\Controllers\Api\Playlist\LikeController;
 Route::prefix('/auth')->group(function () {
     Route::post('register', RegisterController::class); // Registers new User
     Route::post('login', LoginController::class); // Logs User in
-    Route::put('refresh', RefreshController::class); // Refreshes User auth token
+    Route::post('refresh', RefreshController::class); // Refreshes User auth token
 
     Route::middleware('auth:api')->group(function () {
         Route::post('send-code', SendCodeController::class);
