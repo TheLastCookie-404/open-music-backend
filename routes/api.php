@@ -5,6 +5,8 @@ use App\Http\Controllers\Api\Track\FileAccessController;
 use App\Http\Controllers\Api\Track\TrackController;
 use App\Http\Controllers\Api\Playlist\PlaylistController;
 use App\Http\Controllers\Api\Playlist\PlaylistTrackController;
+use App\Http\Controllers\Api\Playlist\LikeController;
+use App\Http\Controllers\Api\Playlist\LikeTrackController;
 use App\Http\Controllers\Api\Auth\ 
 {
     ConfirmController,
@@ -16,7 +18,6 @@ use App\Http\Controllers\Api\Auth\
     RoleController,
     SendCodeController,
 };
-use App\Http\Controllers\Api\Playlist\LikeController;
 
 Route::prefix('/auth')->group(function () {
     Route::post('register', RegisterController::class); // Registers new User
@@ -67,9 +68,15 @@ Route::middleware('auth:api')->group(function () {
             });
 
             Route::prefix('/likes')->group(function () {
-                Route::get('/', [LikeController::class, 'index']); // Show list of User`s tracks in likes playlist
-                Route::post('/', [LikeController::class, 'store']); // Adds new track to likes playlist
-                Route::delete('/', [LikeController::class, 'destroy']); // Removes one track from likes playlist
+                Route::get('/', [LikeController::class, 'index']);
+                // Route::post('/', [, 'store']);
+                // Route::delete('/', [, 'destroy']);
+
+                Route::prefix('/tracks')->group(function () {
+                    Route::get('/', [LikeTrackController::class, 'index']); // Show list of User`s tracks in likes playlist
+                    Route::post('/', [LikeTrackController::class, 'store']); // Adds new track to likes playlist
+                    Route::delete('/', [LikeTrackController::class, 'destroy']); // Removes one track from likes playlist
+                });
             });
         });
     });

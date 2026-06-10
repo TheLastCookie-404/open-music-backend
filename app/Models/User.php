@@ -36,6 +36,7 @@ class User extends Authenticatable implements JWTSubject
     protected $hidden = [
         'password',
         'remember_token',
+        'verification_token'
     ];
 
     // All uploaded tracks by user
@@ -44,15 +45,22 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasMany(Track::class);
     }
 
-    public function likedTracks()
-    {
-        return $this->hasOne(Playlist::class)->where('type', '=', 'likes')->first();
-    }
-
     // All user playlists
     public function playlists() 
     {
         return $this->hasMany(Playlist::class);
+    }
+
+    public function likedTracks()
+    {
+        return $this->hasOne(Playlist::class)
+            ->where('type', '=', 'likes')
+            ->first();
+    }
+
+    public function likesPlaylist() 
+    {
+        return $this->hasOne(Playlist::class)->first();
     }
 
     public function getJWTIdentifier()

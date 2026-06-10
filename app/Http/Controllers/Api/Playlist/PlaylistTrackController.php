@@ -32,7 +32,7 @@ class PlaylistTrackController extends Controller
     }
     
     /**
-     * Upload new track to playlist
+     * Add new track to playlist
      */
     public function store(Request $request, Playlist $playlist)
     {

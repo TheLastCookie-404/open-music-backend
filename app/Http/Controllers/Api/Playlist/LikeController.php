@@ -3,24 +3,23 @@
 namespace App\Http\Controllers\Api\Playlist;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\PaginatedRequest;
-use App\Http\Resources\TrackResource;
 use App\Models\Playlist;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class LikeController extends Controller
 {
     /**
-     * Display list of playlist tracks
+     * Display like playlist info
      */
-    public function index(PaginatedRequest $request)
+    public function index(Request $request)
     {
-        $playlist = auth('api')->user()->likedTracks();
-        $trackList = $request->paginate($playlist->tracks());
+        $playlist = auth('api')->user()->likesPlaylist();
 
-        return TrackResource::collection($trackList)->additional([
-            'message' => 'Playlist tracks',
-        ]);
+        return response()->json([
+            'message' => 'Likes playlist',
+            'data' => $playlist
+        ], Response::HTTP_OK);
     }
 
     /**
