@@ -16,7 +16,9 @@ class PlaylistPolicy
     {
         $isLikesType = $playlist->type === 'likes';
 
-        return $user->id === $playlist->user_id && !$isLikesType;
+        if ($isLikesType) return Response::deny('Likes playlist info cannot be updated via this endpoint');
+
+        return $user->id === $playlist->user_id;
     }
 
     /**
@@ -25,6 +27,8 @@ class PlaylistPolicy
     public function deletePlaylist(User $user, Playlist $playlist) {
         $isLikesType = $playlist->type === 'likes';
 
-        return $user->id === $playlist->user_id && !$isLikesType;
+        if ($isLikesType) return Response::deny('Likes playlist cannot be deleted');
+
+        return $user->id === $playlist->user_id;
     }
 }
