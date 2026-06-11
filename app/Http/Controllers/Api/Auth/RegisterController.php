@@ -5,13 +5,17 @@ namespace App\Http\Controllers\Api\Auth;
 use App\Http\Controllers\Api\AuthController;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response;
+use Dedoc\Scramble\Attributes\Group;
 
+#[Group('Auth')]
 class RegisterController extends AuthController
 {
-    // Register new user
-    public function index(Request $request)
+    /**
+     * Register new user
+     */
+    public function __invoke(Request $request)
     {
         $request->validate([
             'name' => 'required|string|between:1,255',
@@ -31,9 +35,19 @@ class RegisterController extends AuthController
             'password' => bcrypt($password)
         ]);
 
-        return response()->json([
+        $credentials = $request->only('email', 'password');
+
+        /** @disregard P1013 Undefined method (for attempt()) */
+        if (!$token = auth('api')->attempt($credentials)) {
+            Log::info('register auto authorization failed');
+        }
+
+        return $this->respondWithToken($token, [
             'message' => 'User registered successfully', 
-            'user' => $user
-        ], Response::HTTP_CREATED);
+            'data' => $user
+        ], Response::HTTP_CREATED)->cookie(
+            'token', $token, config('jwt.refresh_ttl'), // Expires in 1 day
+            '/', null, true, true, false // path, domain, secure, httpOnly, raw, sameSite
+        );
     }
 }

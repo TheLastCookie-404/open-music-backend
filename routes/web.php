@@ -16,7 +16,7 @@ Route::get('/', function () {
         'version' => '1.0',
         'api-root-url' => url('/api'),
         'tracks' => url('/api/tracks'),
-        'documentation' => 'https://',
+        'documentation' => url('docs/api'),
         'author' => 'TheLastCookie-404',
         'github' => 'https://github.com/TheLastCookie-404',
         'message' => 'Press autoformat to get normalized urls!'

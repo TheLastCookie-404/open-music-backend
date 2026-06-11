@@ -25,14 +25,7 @@ class User extends Authenticatable implements JWTSubject
         'email',
         'role',
         'password',
-    ];
-
-    protected $casts = [
-        'name',
-        'nickname',
-        'email',
-        'role',
-        'password',
+        'verification_token'
     ];
 
     /**
@@ -43,24 +36,31 @@ class User extends Authenticatable implements JWTSubject
     protected $hidden = [
         'password',
         'remember_token',
+        'verification_token'
     ];
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
-    // protected function casts(): array
-    // {
-    //     return [
-    //         'email_verified_at' => 'datetime',
-    //         'password' => 'hashed',
-    //     ];
-    // }
-
-    public function media()
+    // All uploaded tracks by user
+    public function tracks()
     {
-        return $this->hasMany(Media::class)->get()->all();
+        return $this->hasMany(Track::class);
+    }
+
+    // All user playlists
+    public function playlists() 
+    {
+        return $this->hasMany(Playlist::class);
+    }
+
+    public function likedTracks()
+    {
+        return $this->hasOne(Playlist::class)
+            ->where('type', '=', 'likes')
+            ->first();
+    }
+
+    public function likesPlaylist() 
+    {
+        return $this->hasOne(Playlist::class)->first();
     }
 
     public function getJWTIdentifier()

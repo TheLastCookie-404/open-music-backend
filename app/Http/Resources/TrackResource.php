@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Track;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -10,7 +11,7 @@ use Illuminate\Support\Facades\Log;
 use Owenoj\LaravelGetId3\GetId3;
 
 
-class MediaResource extends JsonResource
+class TrackResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -28,11 +29,11 @@ class MediaResource extends JsonResource
         ]);
 
         $isExtended = $request->get('extended');
-        $rootUrl = url("storage/media/$this->id");
+        $rootUrl = url("storage/track/$this->id");
         // $audioUrl = "$rootUrl/$this->audio_filename";
         $audioUrl = url("api/file/$this->id");
         $fileNameDecoded = rawurldecode($this->audio_filename);
-        $isUserAccessAllowed = Gate::allows('get-track', [$this->status]);
+        $isUserAccessAllowed = Gate::allows('get-track', [Track::class, $this->status]); // Auth with policy (policiy doesnt works without Track::class)
         $artworkUrl = null;
         $fullDataEncoded = null;
 
@@ -44,7 +45,7 @@ class MediaResource extends JsonResource
         }
 
         try {
-            $metadata = GetId3::fromDiskAndPath('media', "$this->id/$fileNameDecoded");
+            $metadata = GetId3::fromDiskAndPath('track', "$this->id/$fileNameDecoded");
             $fullData = $metadata->extractInfo();
             $fullDataEncoded = mb_convert_encoding($fullData, 'UTF-8');
         } catch (Exception $e) {
@@ -71,7 +72,6 @@ class MediaResource extends JsonResource
             'playtime_seconds' => $this->playtime_seconds,
             'status' => $this->status,
             'artwork_url' => $artworkUrl,
-            // 'audio_url' => $audioUrl,
             'audio_url' => $isUserAccessAllowed ? $audioUrl : null,
             'audio_download_url' => null,
             'file_metadata' => $isExtended === 'yes' && $isUserAccessAllowed ? $fullDataEncoded : null,
