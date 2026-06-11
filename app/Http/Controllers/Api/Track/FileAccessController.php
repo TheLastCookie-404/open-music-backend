@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Api\Track;
 
-use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Controller;
 use App\Models\Track;
 use Illuminate\Http\Request;
@@ -11,10 +10,13 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Dedoc\Scramble\Attributes\Group;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 #[Group('Track')]
 class FileAccessController extends Controller
 {
+    use AuthorizesRequests;
+
     /**
      * File access
      */
@@ -33,7 +35,8 @@ class FileAccessController extends Controller
         $fileName = $track->value('audio_filename');
         $fileName = rawurldecode($fileName);
 
-        Gate::authorize('get-track', [$trackStatus]);
+        // Auth with policy (policiy doesnt works without Track::class)
+        Gate::authorize('get-track', [Track::class, $trackStatus]);
         
         $file = Storage::disk('track')->path("$id/$fileName");
 

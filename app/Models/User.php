@@ -40,7 +40,7 @@ class User extends Authenticatable implements JWTSubject
     ];
 
     // All uploaded tracks by user
-    public function track()
+    public function tracks()
     {
         return $this->hasMany(Track::class);
     }

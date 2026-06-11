@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Track;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -32,7 +33,7 @@ class TrackResource extends JsonResource
         // $audioUrl = "$rootUrl/$this->audio_filename";
         $audioUrl = url("api/file/$this->id");
         $fileNameDecoded = rawurldecode($this->audio_filename);
-        $isUserAccessAllowed = Gate::allows('get-track', [$this->status]);
+        $isUserAccessAllowed = Gate::allows('get-track', [Track::class, $this->status]); // Auth with policy (policiy doesnt works without Track::class)
         $artworkUrl = null;
         $fullDataEncoded = null;
 

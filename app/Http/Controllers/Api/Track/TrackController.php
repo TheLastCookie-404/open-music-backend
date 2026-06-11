@@ -81,7 +81,8 @@ class TrackController extends Controller
         $artwork = $metadata->getArtwork(true);
         $artworkFileName = 'artwork.jpg';
 
-        Gate::authorize('upload-track');
+        // Auth with policy (policiy doesnt works without Track::class)
+        Gate::authorize('upload-track', Track::class);
 
         try {
 
@@ -122,13 +123,17 @@ class TrackController extends Controller
 
         $id = $request->get('id');
         
-        $isEntryExists = $track->whereId($id)->exists();
+        // $isEntryExists = $track->whereId($id)->exists();
+        $track = $track->find($id) ?? false;
         $isDirecoryExists = Storage::disk('track')->exists("$id");
 
-        if ($isEntryExists || $isDirecoryExists) {
-            Gate::authorize('delete-track', [$track, $id]);
+        Log::info((boolean) $track);
+
+        if ($track || $isDirecoryExists) {
+            // Auth with policy (policiy doesnt works without Track::class)
+            Gate::authorize('delete-track', [Track::class, $track]);
             
-            $track->whereId($id)->delete();
+            $track->delete();
             Storage::disk('track')->deleteDirectory("$id");
             Storage::disk('public-track')->deleteDirectory("$id");
         } else {

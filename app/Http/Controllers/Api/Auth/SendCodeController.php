@@ -24,7 +24,8 @@ class SendCodeController extends Controller
         $userId = $user->id;
         $email = $user->email;
 
-        User::whereId($userId)->update([
+        // User::whereId($userId)->update([ <-- use this if bug found
+        User::find($userId)->update([
             'verification_token' => $verificationToken
         ]);
 

@@ -58,10 +58,9 @@ class PlaylistController extends Controller
         ]);
 
         $playlistId = $request->get('playlist_id');
+        $playlist = $playlist->findOrFail($playlistId);
 
-        Log::info($playlistId);
-
-        Gate::authorize('delete-playlist', [$playlist, $playlistId]);
+        Gate::authorize('delete-playlist', [Playlist::class, $playlist]);
         
         $playlist->destroy($playlistId);
 
