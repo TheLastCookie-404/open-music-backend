@@ -5,7 +5,12 @@ namespace App\Http\Controllers\Api\Playlist;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PaginatedRequest;
 use App\Http\Resources\TrackResource;
+use App\Models\Playlist;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
+use Symfony\Component\HttpFoundation\Response;
 
 class LikeTrackController extends Controller
 {
@@ -23,34 +28,45 @@ class LikeTrackController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Add new track to playlist
      */
-    public function store(Request $request)
+    public function store(Request $request, Playlist $playlist)
     {
-        //
+        $request->validate([
+            'track_id' => 'required|string|max:32|alpha_num'
+        ]);
+
+        $trackId = $request->get('track_id');
+        $user = auth('api')->user();
+        $playlist = $user->likesPlaylist();
+
+        Gate::authorize('update-playlist-content', [Playlist::class, $playlist]);
+
+        $playlist->addTrack($trackId);
+
+        return response()->json([
+            'message' => 'Track added'
+        ], Response::HTTP_CREATED);
     }
 
     /**
-     * Display the specified resource.
+     * Remove track from playlist
      */
-    public function show(string $id)
+    public function destroy(Request $request, Playlist $playlist)
     {
-        //
-    }
+        $request->validate([
+            'track_id' => 'required|string|max:32|alpha_num'
+        ]);
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
+        $trackId = $request->get('track_id');
+        $user = auth('api')->user();
+        $playlist = $user->likesPlaylist();
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        Gate::authorize('update-playlist-content', [Playlist::class, $playlist]);
+        $playlist->removeTrack($trackId);
+
+        return response()->json([
+            'message' => 'Track removed'
+        ], Response::HTTP_OK);
     }
 }

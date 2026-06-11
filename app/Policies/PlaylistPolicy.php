@@ -9,8 +9,17 @@ use Illuminate\Support\Facades\Log;
 
 class PlaylistPolicy
 {
+
     /**
-     * Determine whether the user can update the model.
+     * Determine whether the user can update the playlist content.
+     */
+    public function updatePlaylistContent(User $user, Playlist $playlist) 
+    {
+        return $user->id === $playlist->user_id;
+    }
+
+    /**
+     * Determine whether the user can update the playlist content. (NOT USED!!!)
      */
     public function updatePlaylist(User $user, Playlist $playlist) 
     {
@@ -22,7 +31,7 @@ class PlaylistPolicy
     }
 
     /**
-     * Determine whether the user can delete the model.
+     * Determine whether the user can delete the playlist.
      */
     public function deletePlaylist(User $user, Playlist $playlist) {
         $isLikesType = $playlist->type === 'likes';

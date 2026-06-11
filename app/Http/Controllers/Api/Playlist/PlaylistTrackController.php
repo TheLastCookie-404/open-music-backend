@@ -43,10 +43,10 @@ class PlaylistTrackController extends Controller
 
         $trackId = $request->get('track_id');
         $playlistId = $request->get('playlist_id');
+        $playlist = $playlist->findOrFail($playlistId);
 
-        Gate::authorize('update-playlist', [$playlist, $playlistId]);
+        Gate::authorize('update-playlist-content', [Playlist::class, $playlist]);
 
-        $playlist = Playlist::findOrFail($playlistId);
         $playlist->addTrack($trackId);
 
         return response()->json([
@@ -66,10 +66,10 @@ class PlaylistTrackController extends Controller
 
         $trackId = $request->get('track_id');
         $playlistId = $request->get('playlist_id');
+        $playlist = $playlist->findOrFail($playlistId);
 
-        Gate::authorize('update-playlist', [$playlist, $playlistId]);
+        Gate::authorize('update-playlist-content', [Playlist::class, $playlist]);
 
-        $playlist = Playlist::findOrFail($playlistId);
         $playlist->removeTrack($trackId);
 
         return response()->json([
