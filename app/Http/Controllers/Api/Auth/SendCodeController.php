@@ -4,11 +4,13 @@ namespace App\Http\Controllers\Api\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Notifications\MailConfirmation;
 use PHPOpenSourceSaver\JWTAuth\Exceptions\JWTException;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Symfony\Component\HttpFoundation\Response;
 use Dedoc\Scramble\Attributes\Group;
+use Illuminate\Support\Facades\URL;
 
 #[Group('Auth')]
 class SendCodeController extends Controller
@@ -27,15 +29,17 @@ class SendCodeController extends Controller
         $email = $user->email;
 
         // User::whereId($userId)->update([ <-- use this if bug found
-        User::find($userId)->update([
+        $user->update([
             'verification_token' => $verificationToken
         ]);
+
+        $user->notify(new MailConfirmation($verificationToken, ''));
         
-        Mail::raw($verificationToken, function ($message) use ($email) {
-            $message
-                ->to($email)
-                ->subject('Laravel');
-        });
+        // Mail::raw($verificationToken, function ($message) use ($email) {
+        //     $message
+        //         ->to($email)
+        //         ->subject('Laravel');
+        // });
 
         return response()->json([
             'message' => 'Verification code was sent'
