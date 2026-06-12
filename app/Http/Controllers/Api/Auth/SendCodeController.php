@@ -30,8 +30,6 @@ class SendCodeController extends Controller
         User::find($userId)->update([
             'verification_token' => $verificationToken
         ]);
-
-        Log::info($user->remember_token);
         
         Mail::raw($verificationToken, function ($message) use ($email) {
             $message

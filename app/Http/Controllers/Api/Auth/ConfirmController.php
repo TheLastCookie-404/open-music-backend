@@ -24,7 +24,11 @@ class ConfirmController extends Controller
         $code = $request->get('code');
         $verificationToken = $user->verification_token;
 
-        if ($code !== $verificationToken) {
+        Log::info("$code, $verificationToken");
+
+        Log::info('HasValidSignature' . $request->hasValidSignature());
+
+        if ($code !== $verificationToken && !$request->hasValidSignature()) {
             return response()->json([
                 'message' => 'Email was not confirmed'
             ], Response::HTTP_UNPROCESSABLE_ENTITY);

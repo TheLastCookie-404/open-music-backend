@@ -117,4 +117,8 @@ return [
 
     'password_timeout' => env('AUTH_PASSWORD_TIMEOUT', 10800),
 
+
+    'verification' => [
+        'expire' => 1, // Time in minutes (e.g., 2 hours)
+    ],
 ];

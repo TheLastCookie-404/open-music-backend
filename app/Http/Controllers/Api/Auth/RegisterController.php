@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Auth;
 use App\Http\Controllers\Api\AuthController;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response;
 use Dedoc\Scramble\Attributes\Group;
@@ -41,6 +42,8 @@ class RegisterController extends AuthController
         if (!$token = auth('api')->attempt($credentials)) {
             Log::info('register auto authorization failed');
         }
+
+        event(new Registered($user));
 
         return $this->respondWithToken($token, [
             'message' => 'User registered successfully', 
