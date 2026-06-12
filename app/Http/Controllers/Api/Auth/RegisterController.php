@@ -43,7 +43,7 @@ class RegisterController extends AuthController
             Log::info('register auto authorization failed');
         }
 
-        event(new Registered($user));
+        // event(new Registered($user));
 
         return $this->respondWithToken($token, [
             'message' => 'User registered successfully', 

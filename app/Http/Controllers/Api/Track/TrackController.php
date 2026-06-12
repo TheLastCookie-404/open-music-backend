@@ -23,7 +23,6 @@ class TrackController extends Controller
     public const UNIQUE_VIOLATION = '23505';
     public const INTEGRITY_CONSTRAINT_VIOLATION = '23000';
 
-
     /**
      * Display list of Tracks
      */

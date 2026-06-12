@@ -26,8 +26,7 @@ Route::prefix('/auth')->group(function () {
 
     Route::middleware('auth:api')->group(function () {
         Route::post('send-code', SendCodeController::class);
-        // Route::post('confirm-email', ConfirmController::class);
-        Route::get('confirm-email', ConfirmController::class)->name('verification.verify');
+        Route::post('confirm-email', ConfirmController::class); 
         Route::get('profile', ProfileController::class); // Shows profile of current user
         Route::delete('logout', LogoutController::class); // Logs User out
     });
