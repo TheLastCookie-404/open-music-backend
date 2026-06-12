@@ -15,10 +15,7 @@ use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response;
 
 class LikeTrackController extends Controller
-{
-    public const UNIQUE_VIOLATION = '23505';
-    public const INTEGRITY_CONSTRAINT_VIOLATION = '23000';
-    
+{ 
     /**
      * Display list of playlist tracks
      */
@@ -49,21 +46,7 @@ class LikeTrackController extends Controller
 
         Gate::authorize('update-playlist-content', [Playlist::class, $playlist]);
 
-        try {
-            $playlist->addTrack($trackId);
-        } catch (Exception $e) {
-            Log::error($e);
-
-            if ($e->getCode() === self::UNIQUE_VIOLATION || $e->getCode() === self::INTEGRITY_CONSTRAINT_VIOLATION) {
-                return response()->json([
-                    'message' => 'Track already exists',
-                ], Response::HTTP_CONFLICT);
-            }
-
-            return response()->json([
-                'message' => 'Track adding failed',
-            ], Response::HTTP_INTERNAL_SERVER_ERROR);
-        }
+        $playlist->addTrack($trackId);
 
         return response()->json([
             'message' => 'Track added'
@@ -83,7 +66,7 @@ class LikeTrackController extends Controller
         $user = auth('api')->user();
         $playlist = $user->likesPlaylist();
 
-        Track::findOrFail($trackId);
+        $playlist->tracks()->findOrFail($trackId);
 
         Gate::authorize('update-playlist-content', [Playlist::class, $playlist]);
         $playlist->removeTrack($trackId);

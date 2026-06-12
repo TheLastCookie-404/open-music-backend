@@ -30,7 +30,7 @@ class FileAccessController extends Controller
 
         $id = $request->get('id');
 
-        $track = $track->whereId($id);
+        $track = $track->findOrFail($id);
         $trackStatus = $track->value('status');
         $fileName = $track->value('audio_filename');
         $fileName = rawurldecode($fileName);

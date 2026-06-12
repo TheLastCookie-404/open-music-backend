@@ -83,28 +83,12 @@ class TrackController extends Controller
         // Auth with policy (policiy doesnt works without Track::class)
         Gate::authorize('upload-track', Track::class);
 
-        try {
-
-            $instance = $this->storeInDB($metadata, $fileHash, [
-                'artwork_filename' => $artwork !== null ? $artworkFileName : null,
-                'audio_filename' => $fileName // $fileNameEncoded
-            ]);
-            
-            $this->upload($instance['id'], $file, $fileName, $artwork, $artworkFileName);
-        }
-        catch (Exception $e) {
-            Log::error($e);
-
-            if ($e->getCode() === self::UNIQUE_VIOLATION || $e->getCode() === self::INTEGRITY_CONSTRAINT_VIOLATION) {
-                return response()->json([
-                    'message' => 'Track already exists',
-                ], Response::HTTP_CONFLICT);
-            }
-
-            return response()->json([
-                'message' => 'Track uploading failed',
-            ], Response::HTTP_INTERNAL_SERVER_ERROR);
-        }
+        $instance = $this->storeInDB($metadata, $fileHash, [
+            'artwork_filename' => $artwork !== null ? $artworkFileName : null,
+            'audio_filename' => $fileName // $fileNameEncoded
+        ]);
+        
+        $this->upload($instance['id'], $file, $fileName, $artwork, $artworkFileName);
 
         return response()->json([
             'message' => 'Track uploaded',
@@ -122,27 +106,16 @@ class TrackController extends Controller
 
         $id = $request->get('id');
         
-        // $isEntryExists = $track->whereId($id)->exists();
-        $track = $track->find($id) ?? false;
-        $isDirecoryExists = Storage::disk('track')->exists("$id");
+        $track = $track->findOrFail($id);
 
-        Log::info((boolean) $track);
-
-        if ($track || $isDirecoryExists) {
-            // Auth with policy (policiy doesnt works without Track::class)
-            Gate::authorize('delete-track', [Track::class, $track]);
-            
-            $track->delete();
-            Storage::disk('track')->deleteDirectory("$id");
-            Storage::disk('public-track')->deleteDirectory("$id");
-        } else {
-            return response()->json([
-                "message" => "Track does not exist"
-            ], Response::HTTP_NOT_FOUND);
-        }
+        Gate::authorize('delete-track', [Track::class, $track]);
+        
+        $track->delete();
+        Storage::disk('track')->deleteDirectory("$id");
+        Storage::disk('public-track')->deleteDirectory("$id");
 
         return response()->json([
-            "message" => "Track deleted"
+            'message' => 'Track deleted'
         ], Response::HTTP_OK);
     }
 
