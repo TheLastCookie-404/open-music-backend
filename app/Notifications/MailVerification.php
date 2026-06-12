@@ -7,7 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class MailConfirmation extends Notification
+class MailVerification extends Notification
 {
     use Queueable;
 
@@ -15,8 +15,8 @@ class MailConfirmation extends Notification
      * Create a new notification instance.
      */
     public function __construct(
-        public string $confirmationCode,
-        public string $confirmationUrl
+        public string $verificationCode,
+        public ?string $verificationUrl
     ) {}
 
     /**
@@ -35,9 +35,11 @@ class MailConfirmation extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-            ->line('Please confirm you email addres, here is confirmation code')
-            ->line("# $this->confirmationCode")
-            ->action('Confirm mail', $this->confirmationUrl ?? $this->confirmationCode)
+            ->line('Please verify you email addres, here is your verification code')
+            ->line("## $this->verificationCode")
+            ->when($this->verificationUrl !== null, function ($message) {
+                $message->action('Confirm mail', "$this->verificationUrl/$this->verificationCode");
+            })
             ->line('Thank you for using our application!');
     }
 

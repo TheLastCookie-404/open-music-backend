@@ -3,14 +3,10 @@
 namespace App\Http\Controllers\Api\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
-use App\Notifications\MailConfirmation;
-use PHPOpenSourceSaver\JWTAuth\Exceptions\JWTException;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Mail;
+use App\Notifications\MailVerification;
 use Symfony\Component\HttpFoundation\Response;
 use Dedoc\Scramble\Attributes\Group;
-use Illuminate\Support\Facades\URL;
+use Illuminate\Http\Request;
 
 #[Group('Auth')]
 class SendCodeController extends Controller
@@ -19,8 +15,14 @@ class SendCodeController extends Controller
     /**
      * Send verification code
      */
-    public function __invoke()
+    public function __invoke(Request $request)
     {
+        $request->validate([
+            'verification_link_url' => 'nullable|string'
+        ]);
+
+        $verificationUrl = $request->get('verification_link_url');
+
         $randomNumber = mt_rand(0, self::MAX_RAND_NUM);
         $verificationToken = str_pad($randomNumber, 6, '0', STR_PAD_LEFT);
 
@@ -33,7 +35,7 @@ class SendCodeController extends Controller
             'verification_token' => $verificationToken
         ]);
 
-        $user->notify(new MailConfirmation($verificationToken, ''));
+        $user->notify(new MailVerification($verificationToken, $verificationUrl));
         
         // Mail::raw($verificationToken, function ($message) use ($email) {
         //     $message
