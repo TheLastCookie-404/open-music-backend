@@ -13,12 +13,14 @@ use Dedoc\Scramble\Attributes\Group;
 #[Group('Auth')]
 class SendCodeController extends Controller
 {
+    private const MAX_RAND_NUM = 999999;
     /**
      * Send verification code
      */
     public function __invoke()
     {
-        $verificationToken = (string) random_int(100000, 999999);
+        $randomNumber = mt_rand(0, self::MAX_RAND_NUM);
+        $verificationToken = str_pad($randomNumber, 6, '0', STR_PAD_LEFT);
 
         $user = auth('api')->user();
         $userId = $user->id;

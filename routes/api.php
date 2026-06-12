@@ -68,7 +68,7 @@ Route::middleware('auth:api')->group(function () {
             });
 
             Route::prefix('/likes')->group(function () {
-                Route::get('/', [LikeController::class, 'index']);
+                Route::get('/', [LikeController::class, 'index']); // Show info about likes playlist
                 // Route::post('/', [, 'store']);
                 // Route::delete('/', [, 'destroy']);
 
