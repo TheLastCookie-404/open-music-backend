@@ -5,11 +5,9 @@ namespace App\Http\Controllers\Api\Playlist;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PaginatedRequest;
 use App\Http\Resources\PlaylistResource;
-use App\Models\User;
 use App\Models\Playlist;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response;
 
 class PlaylistController extends Controller

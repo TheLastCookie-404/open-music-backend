@@ -7,11 +7,8 @@ use App\Http\Requests\PaginatedRequest;
 use App\Http\Resources\TrackResource;
 use App\Models\Playlist;
 use App\Models\Track;
-use App\Models\User;
-use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response;
 
 class LikeTrackController extends Controller

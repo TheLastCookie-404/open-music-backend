@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Api\Auth;
 use App\Http\Controllers\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Dedoc\Scramble\Attributes\Group;
 use Illuminate\Support\Facades\Cache;
 

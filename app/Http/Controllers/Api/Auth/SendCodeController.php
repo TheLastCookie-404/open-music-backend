@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Notifications\MailVerification;
+use App\Services\EmailVerificationService;
 use Symfony\Component\HttpFoundation\Response;
 use Dedoc\Scramble\Attributes\Group;
 use Illuminate\Http\Request;
@@ -14,6 +15,11 @@ use Illuminate\Support\Facades\Log;
 class SendCodeController extends Controller
 {
     private const MAX_RAND_NUM = 999999;
+
+    public function __construct(
+        protected EmailVerificationService $emailVerificationService
+    ) {}
+
     /**
      * Send verification code
      */
@@ -25,22 +31,24 @@ class SendCodeController extends Controller
 
         $verificationUrl = $request->get('verification_link_url');
 
-        $randomNumber = mt_rand(0, self::MAX_RAND_NUM);
-        $verificationCode = str_pad($randomNumber, 6, '0', STR_PAD_LEFT);
+        // $randomNumber = mt_rand(0, self::MAX_RAND_NUM);
+        // $verificationCode = str_pad($randomNumber, 6, '0', STR_PAD_LEFT);
         $emailVerifyTtl = config('auth.email_verify_ttl');
 
-        $user = auth('api')->user();
-        $userId = $user->id;
+        $this->emailVerificationService->sendCode($verificationUrl);
 
-        if ($user->hasVerifiedEmail()) {
-            return response()->json([
-                'message' => 'Email already verified'
-            ], Response::HTTP_CONFLICT);
-        }
+        // $user = auth('api')->user();
+        // $userId = $user->id;
 
-        Cache::put("user_{$userId}_email_verify", $verificationCode, $emailVerifyTtl);
+        // if ($user->hasVerifiedEmail()) {
+        //     return response()->json([
+        //         'message' => 'Email already verified'
+        //     ], Response::HTTP_CONFLICT);
+        // }
 
-        $user->notify(new MailVerification($verificationCode, $verificationUrl));
+        // Cache::put("user_{$userId}_email_verify", $verificationCode, $emailVerifyTtl);
+
+        // $user->notify(new MailVerification($verificationCode, $verificationUrl));
 
         return response()->json([
             'message' => 'Verification code was sent',
