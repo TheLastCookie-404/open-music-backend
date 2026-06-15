@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Dedoc\Scramble\Attributes\Group;
+use Illuminate\Support\Facades\Cache;
 
 #[Group('Auth')]
 class ConfirmController extends Controller
@@ -22,13 +23,24 @@ class ConfirmController extends Controller
 
         $user = auth('api')->user();
         $code = $request->get('code');
-        $verificationToken = $user->verification_token;
+        $userId = $user->id;
+        $verificationCode = Cache::get("user_{$userId}_email_verify");
 
-        Log::info("$code, $verificationToken");
-
-        if ($code !== $verificationToken) {
+        if ($user->hasVerifiedEmail()) {
             return response()->json([
-                'message' => 'Email was not confirmed'
+                'message' => 'Email already verified'
+            ], Response::HTTP_CONFLICT);
+        }
+
+        if ($verificationCode === null) {
+            return response()->json([
+                'message' => 'Verification code expired or was not sent'
+            ], Response::HTTP_GONE);
+        }
+
+        if ($code !== $verificationCode) {
+            return response()->json([
+                'message' => 'Invalid verification code'
             ], Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 

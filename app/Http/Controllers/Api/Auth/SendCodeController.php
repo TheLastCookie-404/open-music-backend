@@ -7,6 +7,7 @@ use App\Notifications\MailVerification;
 use Symfony\Component\HttpFoundation\Response;
 use Dedoc\Scramble\Attributes\Group;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 #[Group('Auth')]
 class SendCodeController extends Controller
@@ -24,16 +25,14 @@ class SendCodeController extends Controller
         $verificationUrl = $request->get('verification_link_url');
 
         $randomNumber = mt_rand(0, self::MAX_RAND_NUM);
-        $verificationToken = str_pad($randomNumber, 6, '0', STR_PAD_LEFT);
+        $verificationCode = str_pad($randomNumber, 6, '0', STR_PAD_LEFT);
 
         $user = auth('api')->user();
+        $userId = $user->id;
 
-        // User::whereId($userId)->update([ <-- use this if bug found
-        $user->update([
-            'verification_token' => $verificationToken
-        ]);
+        Cache::put("user_{$userId}_email_verify", $verificationCode, 60);
 
-        $user->notify(new MailVerification($verificationToken, $verificationUrl));
+        $user->notify(new MailVerification($verificationCode, $verificationUrl));
 
         return response()->json([
             'message' => 'Verification code was sent'
