@@ -27,8 +27,6 @@ class SendCodeController extends Controller
         $verificationToken = str_pad($randomNumber, 6, '0', STR_PAD_LEFT);
 
         $user = auth('api')->user();
-        $userId = $user->id;
-        $email = $user->email;
 
         // User::whereId($userId)->update([ <-- use this if bug found
         $user->update([
@@ -36,12 +34,6 @@ class SendCodeController extends Controller
         ]);
 
         $user->notify(new MailVerification($verificationToken, $verificationUrl));
-        
-        // Mail::raw($verificationToken, function ($message) use ($email) {
-        //     $message
-        //         ->to($email)
-        //         ->subject('Laravel');
-        // });
 
         return response()->json([
             'message' => 'Verification code was sent'
