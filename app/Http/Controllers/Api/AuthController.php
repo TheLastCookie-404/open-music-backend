@@ -12,7 +12,7 @@ class AuthController extends Controller
         /** @disregard P1013 Undefined method (for factory()) */
         return response()->json([
             ...$data,
-            'auth' => [
+            'meta' => [
                 'token_type' => 'bearer',
                 'token' => $token,
                 'expires_in' => auth('api')->factory()->getTTL() * 60,

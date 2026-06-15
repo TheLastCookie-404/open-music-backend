@@ -6,6 +6,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use Illuminate\Support\Str;
 
 class MailVerification extends Notification implements ShouldQueue
 {
@@ -34,11 +35,15 @@ class MailVerification extends Notification implements ShouldQueue
      */
     public function toMail(object $notifiable): MailMessage
     {
+        if (!empty($this->verificationUrl)) {
+            $this->verificationUrl = $this->manageVerificationUrl($this->verificationUrl, $this->verificationCode);
+        }
+        
         return (new MailMessage)
             ->line('Please verify you email addres, here is your verification code')
             ->line("## $this->verificationCode")
             ->when($this->verificationUrl !== null, function ($message) {
-                $message->action('Confirm mail', "$this->verificationUrl/$this->verificationCode");
+                $message->action('Confirm mail', "$this->verificationUrl");
             })
             ->line('Thank you for using our application!');
     }
@@ -53,5 +58,16 @@ class MailVerification extends Notification implements ShouldQueue
         return [
             //
         ];
+    }
+
+    private function manageVerificationUrl(string $verificationUrl, string $verificationCode)
+    {
+        if (Str::is('*:code*', $verificationUrl)) {
+            return strtr($verificationUrl, [
+                ':code' => $verificationCode
+            ]);
+        } 
+
+        return "$verificationUrl/$verificationCode";
     }
 }
