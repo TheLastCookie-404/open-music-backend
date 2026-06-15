@@ -24,7 +24,8 @@ class ConfirmController extends Controller
         $user = auth('api')->user();
         $code = $request->get('code');
         $userId = $user->id;
-        $verificationCode = Cache::get("user_{$userId}_email_verify");
+        $verificationCodeKey = "user_{$userId}_email_verify";
+        $verificationCode = Cache::get($verificationCodeKey);
 
         if ($user->hasVerifiedEmail()) {
             return response()->json([
@@ -33,18 +34,22 @@ class ConfirmController extends Controller
         }
 
         if ($verificationCode === null) {
+            Cache::forget($verificationCodeKey);
             return response()->json([
                 'message' => 'Verification code expired or was not sent'
             ], Response::HTTP_GONE);
         }
 
         if ($code !== $verificationCode) {
+            Cache::forget($verificationCodeKey);
             return response()->json([
                 'message' => 'Invalid verification code'
             ], Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
         $user->markEmailAsVerified();
+
+        Cache::forget($verificationCodeKey);
 
         return response()->json([
             'message' => 'Email verified'
