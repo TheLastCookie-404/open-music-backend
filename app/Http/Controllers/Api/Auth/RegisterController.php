@@ -31,7 +31,7 @@ class RegisterController extends AuthController
         $user = User::create([
             'name' => $name,
             'nickname' => $name,
-            'email' => $email,
+            'email' => strtolower($email),
             'password' => bcrypt($password)
         ]);
 
