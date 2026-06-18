@@ -30,7 +30,7 @@ class EmailVerificationService
         return $user->hasVerifiedEmail();
     }
 
-    public function sendCode(?string $verificationUrl)
+    public function sendCode(?string $verificationUrl = null)
     {
         $user = auth('api')->user();
         $userId = $user->id;
@@ -48,7 +48,8 @@ class EmailVerificationService
     {
         $user = auth('api')->user();
         $userId = $user->id;
-        $verificationCode = Cache::get("user_{$userId}_email_verify");
+        $verificationCodeKey = "user_{$userId}_email_verify";
+        $verificationCode = Cache::get($verificationCodeKey);
 
         if ($this->isVerified()) {
             throw new ConflictHttpException('Email already verified');
@@ -63,6 +64,8 @@ class EmailVerificationService
         }
 
         $user->markEmailAsVerified();
+
+        Cache::forget($verificationCodeKey);
     }
 
     private function generateCode(string $userId)

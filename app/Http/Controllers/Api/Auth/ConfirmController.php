@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Services\EmailVerificationService;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Http\Request;
 use Dedoc\Scramble\Attributes\Group;
@@ -11,6 +12,9 @@ use Illuminate\Support\Facades\Cache;
 #[Group('Auth')]
 class ConfirmController extends Controller
 {
+    public function __construct(
+        protected EmailVerificationService $emailVerificationService
+    ) {}
     /**
      * Confirm user mail
      */
@@ -20,35 +24,38 @@ class ConfirmController extends Controller
             'code' => 'required|digits:6'
         ]);
 
-        $user = auth('api')->user();
+        // $user = auth('api')->user();
         $code = $request->get('code');
-        $userId = $user->id;
-        $verificationCodeKey = "user_{$userId}_email_verify";
-        $verificationCode = Cache::get($verificationCodeKey);
 
-        if ($user->hasVerifiedEmail()) {
-            return response()->json([
-                'message' => 'Email already verified'
-            ], Response::HTTP_CONFLICT);
-        }
+        $this->emailVerificationService->verify($code);
+        
+        // $userId = $user->id;
+        // $verificationCodeKey = "user_{$userId}_email_verify";
+        // $verificationCode = Cache::get($verificationCodeKey);
 
-        if ($verificationCode === null) {
-            Cache::forget($verificationCodeKey);
-            return response()->json([
-                'message' => 'Verification code expired or was not sent'
-            ], Response::HTTP_GONE);
-        }
+        // if ($user->hasVerifiedEmail()) {
+        //     return response()->json([
+        //         'message' => 'Email already verified'
+        //     ], Response::HTTP_CONFLICT);
+        // }
 
-        if ($code !== $verificationCode) {
-            Cache::forget($verificationCodeKey);
-            return response()->json([
-                'message' => 'Invalid verification code'
-            ], Response::HTTP_UNPROCESSABLE_ENTITY);
-        }
+        // if ($verificationCode === null) {
+        //     Cache::forget($verificationCodeKey);
+        //     return response()->json([
+        //         'message' => 'Verification code expired or was not sent'
+        //     ], Response::HTTP_GONE);
+        // }
 
-        $user->markEmailAsVerified();
+        // if ($code !== $verificationCode) {
+        //     Cache::forget($verificationCodeKey);
+        //     return response()->json([
+        //         'message' => 'Invalid verification code'
+        //     ], Response::HTTP_UNPROCESSABLE_ENTITY);
+        // }
 
-        Cache::forget($verificationCodeKey);
+        // $user->markEmailAsVerified();
+
+        // Cache::forget($verificationCodeKey);
 
         return response()->json([
             'message' => 'Email verified'

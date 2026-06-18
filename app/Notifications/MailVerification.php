@@ -17,7 +17,7 @@ class MailVerification extends Notification implements ShouldQueue
      */
     public function __construct(
         public string $verificationCode,
-        public ?string $verificationUrl
+        public ?string $verificationUrl = null
     ) {}
 
     /**

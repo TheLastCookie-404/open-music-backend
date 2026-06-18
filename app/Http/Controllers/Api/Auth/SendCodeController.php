@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Log;
 #[Group('Auth')]
 class SendCodeController extends Controller
 {
-    private const MAX_RAND_NUM = 999999;
+    // private const MAX_RAND_NUM = 999999;
 
     public function __construct(
         protected EmailVerificationService $emailVerificationService

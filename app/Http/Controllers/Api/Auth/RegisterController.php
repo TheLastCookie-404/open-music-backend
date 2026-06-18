@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Auth;
 
 use App\Http\Controllers\Api\AuthController;
 use App\Models\User;
+use App\Services\EmailVerificationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response;
@@ -12,6 +13,10 @@ use Dedoc\Scramble\Attributes\Group;
 #[Group('Auth')]
 class RegisterController extends AuthController
 {
+    public function __construct(
+        protected EmailVerificationService $emailVerificationService
+    ) {}
+    
     /**
      * Register new user
      */
@@ -21,12 +26,14 @@ class RegisterController extends AuthController
             'name' => 'required|string|between:1,255',
             'email' => 'required|email:rfc,dns,strict|between:5,255|unique:users',
             'password' => 'required|string|alpha_dash|between:6,12|confirmed',
+            'verification_link_url' => 'nullable|string'
         ]);
 
         $name = $request->get('name');
         $name = $request->get('name');
         $email = $request->get('email');
         $password = $request->get('password');
+        $verificationUrl = $request->get('verification_link_url');
 
         $user = User::create([
             'name' => $name,
@@ -42,7 +49,7 @@ class RegisterController extends AuthController
             Log::info('register auto authorization failed');
         }
 
-        // event(new Registered($user));
+        $this->emailVerificationService->sendCode($verificationUrl);
 
         return $this->respondWithToken($token, [
             'message' => 'User registered successfully', 
