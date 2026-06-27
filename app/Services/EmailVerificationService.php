@@ -74,9 +74,11 @@ class EmailVerificationService
         $randomNumber = mt_rand(0, self::MAX_RAND_NUM);
         $verificationCode = str_pad($randomNumber, 6, '0', STR_PAD_LEFT);
 
-        $isCodeCached = Cache::put("user_{$userId}_email_verify", $verificationCode, $emailVerifyTtl);
+        Cache::put("user_{$userId}_email_verify", $verificationCode, $emailVerifyTtl);
 
-        if ($isCodeCached !== true) throw new HttpException(Response::HTTP_INTERNAL_SERVER_ERROR);
+        // $isCodeCached = Cache::put("user_{$userId}_email_verify", $verificationCode, $emailVerifyTtl);
+
+        // if ($isCodeCached !== true) throw new HttpException(Response::HTTP_INTERNAL_SERVER_ERROR);
 
         return $verificationCode;
     }

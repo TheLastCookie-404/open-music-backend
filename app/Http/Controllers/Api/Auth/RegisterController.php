@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response;
 use Dedoc\Scramble\Attributes\Group;
+use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
 
 #[Group('Auth')]
 class RegisterController extends AuthController
@@ -24,29 +25,48 @@ class RegisterController extends AuthController
     {
         $request->validate([
             'name' => 'required|string|between:1,255',
-            'email' => 'required|email:rfc,dns,strict|between:5,255|unique:users',
+            // 'email' => 'required|email:rfc,dns,strict|between:5,255|unique:users',
+            'email' => 'required|email:rfc,dns,strict|between:5,255',
             'password' => 'required|string|alpha_dash|between:6,12|confirmed',
             'verification_link_url' => 'nullable|string'
         ]);
 
         $name = $request->get('name');
-        $name = $request->get('name');
         $email = $request->get('email');
         $password = $request->get('password');
         $verificationUrl = $request->get('verification_link_url');
 
-        $user = User::create([
-            'name' => $name,
-            'nickname' => $name,
-            'email' => strtolower($email),
-            'password' => bcrypt($password)
-        ]);
+        $user = User::query()->where('email', $email)->first();
+        $isMailVerified = $user !== null ? $user->hasVerifiedEmail() : false;
+
+        if ($isMailVerified === true) {
+            throw new ConflictHttpException('This Email can`t be used');
+        }
+
+        $user = User::updateOrCreate(
+            [
+                'email' => strtolower($email),
+            ],
+            [
+                'name' => $name,
+                'nickname' => $name,
+                'email' => strtolower($email),
+                'password' => bcrypt($password)
+            ]
+        );
+
+        // $user = User::create([
+        //     'name' => $name,
+        //     'nickname' => $name,
+        //     'email' => strtolower($email),
+        //     'password' => bcrypt($password)
+        // ]);
 
         $credentials = $request->only('email', 'password');
 
         /** @disregard P1013 Undefined method (for attempt()) */
         if (!$token = auth('api')->attempt($credentials)) {
-            Log::info('register auto authorization failed');
+            Log::info('Register auto authorization failed');
         }
 
         $this->emailVerificationService->sendCode($verificationUrl);
