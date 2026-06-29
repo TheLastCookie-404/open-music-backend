@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
 use Symfony\Component\HttpKernel\Exception\GoneHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 
 class EmailVerificationService
@@ -23,16 +24,9 @@ class EmailVerificationService
         //
     }
 
-    public function isVerified()
-    {
-        $user = auth('api')->user();
-
-        return $user->hasVerifiedEmail();
-    }
-
     public function sendCode(?string $verificationUrl = null)
     {
-        $user = auth('api')->user();
+        $user = $this->getUser();
         $userId = $user->id;
 
         if ($user->hasVerifiedEmail()) {
@@ -46,12 +40,12 @@ class EmailVerificationService
 
     public function verify(string $code)
     {
-        $user = auth('api')->user();
+        $user = $this->getUser();
         $userId = $user->id;
         $verificationCodeKey = "user_{$userId}_email_verify";
         $verificationCode = Cache::get($verificationCodeKey);
 
-        if ($this->isVerified()) {
+        if ($user->hasVerifiedEmail()) {
             throw new ConflictHttpException('Email already verified');
         }
 
@@ -76,11 +70,16 @@ class EmailVerificationService
 
         Cache::put("user_{$userId}_email_verify", $verificationCode, $emailVerifyTtl);
 
-        // $isCodeCached = Cache::put("user_{$userId}_email_verify", $verificationCode, $emailVerifyTtl);
-
-        // if ($isCodeCached !== true) throw new HttpException(Response::HTTP_INTERNAL_SERVER_ERROR);
-
         return $verificationCode;
     }
 
+    private function getUser() {
+        $user = auth('api')->user();
+
+        if ($user === null) {
+            throw new UnauthorizedHttpException('Unauthenticated.');
+        }
+
+        return $user;
+    }
 }
