@@ -36,7 +36,7 @@ Route::prefix('/tracks')->group(function () {
     Route::get('/', [TrackController::class, 'index']); // Get all tracks
     Route::get('search', [TrackController::class, 'show']); // Gets list of matched tracks
 
-    Route::middleware('auth:api')->group(function () {
+    Route::middleware(['auth:api', 'verified'])->group(function () {
         Route::post('/', [TrackController::class, 'store']); // Uploads one track
         Route::delete('/', [TrackController::class, 'destroy']); // Deletes one track
     });
@@ -49,7 +49,7 @@ Route::get('file/{id}', [FileAccessController::class, 'show']); // Gets one trac
 //     Route::get('tracks', []);
 // });
 
-Route::middleware('auth:api')->group(function () {
+Route::middleware(['auth:api', 'verified'])->group(function () {
 
     Route::prefix('/users')->group(function () {
         Route::patch('role', RoleController::class); // Updates User`s role
