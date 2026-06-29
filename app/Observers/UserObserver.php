@@ -14,12 +14,12 @@ class UserObserver
      */
     public function created(User $user): void
     {
-        Playlist::create([
-            'user_id' => $user->id,
-            'name' => 'playlist.likes',
-            'description' => 'playlist.likes.description',
-            'type' => 'likes'
-        ]);
+        // Playlist::create([
+        //     'user_id' => $user->id,
+        //     'name' => 'playlist.likes',
+        //     'description' => 'playlist.likes.description',
+        //     'type' => 'likes'
+        // ]);
     }
 
     /**
@@ -27,7 +27,14 @@ class UserObserver
      */
     public function updated(User $user): void
     {
-        //
+        if ($user->wasChanged('email_verified_at') && !is_null($user->email_verified_at)) {
+            Playlist::create([
+                'user_id' => $user->id,
+                'name' => 'playlist.likes',
+                'description' => 'playlist.likes.description',
+                'type' => 'likes'
+            ]);
+        }
     }
 
     /**

@@ -41,3 +41,12 @@ services:
             - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
         networks:
             - openmusic
+
+    # scheduler:
+    #     container_name: openmusic-scheduler
+    #     image: nginx:stable-alpine
+    #     restart: always
+    #     depends_on:
+    #         - app
+    #         - postgres
+    #     command: php artisan schedule:work
