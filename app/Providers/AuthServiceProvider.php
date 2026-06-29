@@ -35,7 +35,6 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('update-role', function (User $user) {
             return $user->role === 'superadmin';
         });
-        
 
         // Now in TrackPolicy (Testing)
 

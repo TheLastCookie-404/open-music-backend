@@ -117,4 +117,5 @@ return [
 
     'password_timeout' => env('AUTH_PASSWORD_TIMEOUT', 10800),
     
+    'email_verify_ttl' => env('EMAIL_VERIFY_TTL', 300)
 ];

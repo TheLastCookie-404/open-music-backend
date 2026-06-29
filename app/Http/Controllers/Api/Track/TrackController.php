@@ -2,14 +2,11 @@
 
 namespace App\Http\Controllers\Api\Track;
 
-use Exception;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PaginatedRequest;
-use App\Http\Resources\TrackCollection;
 use App\Http\Resources\TrackResource;
 use App\Models\Track;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\File\UploadedFile;

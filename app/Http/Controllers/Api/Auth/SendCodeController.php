@@ -3,46 +3,58 @@
 namespace App\Http\Controllers\Api\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
-use App\Notifications\MailConfirmation;
-use PHPOpenSourceSaver\JWTAuth\Exceptions\JWTException;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Mail;
+use App\Notifications\MailVerification;
+use App\Services\EmailVerificationService;
 use Symfony\Component\HttpFoundation\Response;
 use Dedoc\Scramble\Attributes\Group;
-use Illuminate\Support\Facades\URL;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 
 #[Group('Auth')]
 class SendCodeController extends Controller
 {
-    private const MAX_RAND_NUM = 999999;
+    // private const MAX_RAND_NUM = 999999;
+
+    public function __construct(
+        protected EmailVerificationService $emailVerificationService
+    ) {}
+
     /**
      * Send verification code
      */
-    public function __invoke()
+    public function __invoke(Request $request)
     {
-        $randomNumber = mt_rand(0, self::MAX_RAND_NUM);
-        $verificationToken = str_pad($randomNumber, 6, '0', STR_PAD_LEFT);
-
-        $user = auth('api')->user();
-        $userId = $user->id;
-        $email = $user->email;
-
-        // User::whereId($userId)->update([ <-- use this if bug found
-        $user->update([
-            'verification_token' => $verificationToken
+        $request->validate([
+            'verification_link_url' => 'nullable|string'
         ]);
 
-        $user->notify(new MailConfirmation($verificationToken, ''));
-        
-        // Mail::raw($verificationToken, function ($message) use ($email) {
-        //     $message
-        //         ->to($email)
-        //         ->subject('Laravel');
-        // });
+        $verificationUrl = $request->get('verification_link_url');
+
+        // $randomNumber = mt_rand(0, self::MAX_RAND_NUM);
+        // $verificationCode = str_pad($randomNumber, 6, '0', STR_PAD_LEFT);
+        $emailVerifyTtl = config('auth.email_verify_ttl');
+
+        $this->emailVerificationService->sendCode($verificationUrl);
+
+        // $user = auth('api')->user();
+        // $userId = $user->id;
+
+        // if ($user->hasVerifiedEmail()) {
+        //     return response()->json([
+        //         'message' => 'Email already verified'
+        //     ], Response::HTTP_CONFLICT);
+        // }
+
+        // Cache::put("user_{$userId}_email_verify", $verificationCode, $emailVerifyTtl);
+
+        // $user->notify(new MailVerification($verificationCode, $verificationUrl));
 
         return response()->json([
-            'message' => 'Verification code was sent'
+            'message' => 'Verification code was sent',
+            'meta' => [
+                'expires_in' => $emailVerifyTtl
+            ]
         ], Response::HTTP_OK);
     }
 }

@@ -21,14 +21,14 @@ use App\Http\Controllers\Api\Auth\
 
 Route::prefix('/auth')->group(function () {
     Route::post('register', RegisterController::class); // Registers new User
-    Route::post('login', LoginController::class); // Logs User in
+    Route::post('login', LoginController::class)->middleware('verified'); // Logs User in
     Route::post('refresh', RefreshController::class); // Refreshes User auth token
 
     Route::middleware('auth:api')->group(function () {
         Route::post('send-code', SendCodeController::class);
-        Route::post('confirm-email', ConfirmController::class); 
-        Route::get('profile', ProfileController::class); // Shows profile of current user
-        Route::delete('logout', LogoutController::class); // Logs User out
+        Route::post('verify-email', ConfirmController::class); 
+        Route::get('profile', ProfileController::class)->middleware('verified'); // Shows profile of current user
+        Route::delete('logout', LogoutController::class)->middleware('verified'); // Logs User out
     });
 });
 
@@ -36,7 +36,7 @@ Route::prefix('/tracks')->group(function () {
     Route::get('/', [TrackController::class, 'index']); // Get all tracks
     Route::get('search', [TrackController::class, 'show']); // Gets list of matched tracks
 
-    Route::middleware('auth:api')->group(function () {
+    Route::middleware(['auth:api', 'verified'])->group(function () {
         Route::post('/', [TrackController::class, 'store']); // Uploads one track
         Route::delete('/', [TrackController::class, 'destroy']); // Deletes one track
     });
@@ -49,7 +49,7 @@ Route::get('file/{id}', [FileAccessController::class, 'show']); // Gets one trac
 //     Route::get('tracks', []);
 // });
 
-Route::middleware('auth:api')->group(function () {
+Route::middleware(['auth:api', 'verified'])->group(function () {
 
     Route::prefix('/users')->group(function () {
         Route::patch('role', RoleController::class); // Updates User`s role
