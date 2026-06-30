@@ -20,15 +20,15 @@ use App\Http\Controllers\Api\Auth\
 };
 
 Route::prefix('/auth')->group(function () {
-    Route::post('register', RegisterController::class); // Registers new User
-    Route::post('login', LoginController::class)->middleware('verified'); // Logs User in
+    Route::post('register', RegisterController::class)->middleware('throttle:15,1'); // Registers new User
+    Route::post('login', LoginController::class)->middleware('throttle:15,1'); // Logs User in
     Route::post('refresh', RefreshController::class); // Refreshes User auth token
 
     Route::middleware('auth:api')->group(function () {
-        Route::post('send-code', SendCodeController::class);
-        Route::post('verify-email', VerifyController::class); 
+        Route::post('send-code', SendCodeController::class)->middleware('throttle:5,1');
+        Route::post('verify-email', VerifyController::class)->middleware('throttle:5,1');
         Route::get('profile', ProfileController::class)->middleware('verified'); // Shows profile of current user
-        Route::delete('logout', LogoutController::class)->middleware('verified'); // Logs User out
+        Route::delete('logout', LogoutController::class)->middleware(['verified', 'throttle:10,1']); // Logs User out
     });
 });
 
@@ -37,8 +37,8 @@ Route::prefix('/tracks')->group(function () {
     Route::get('search', [TrackController::class, 'show']); // Gets list of matched tracks
 
     Route::middleware(['auth:api', 'verified'])->group(function () {
-        Route::post('/', [TrackController::class, 'store']); // Uploads one track
-        Route::delete('/', [TrackController::class, 'destroy']); // Deletes one track
+        Route::post('/', [TrackController::class, 'store'])->middleware('throttle:100,1'); // Uploads one track
+        Route::delete('/', [TrackController::class, 'destroy'])->middleware('throttle:100,1'); // Deletes one track
     });
 });
 
@@ -58,13 +58,13 @@ Route::middleware(['auth:api', 'verified'])->group(function () {
     Route::prefix('/me')->group(function () {
         Route::prefix('/playlists')->group(function () {
             Route::get('/', [PlaylistController::class, 'index']); // Show list of User`s playlists
-            Route::post('/', [PlaylistController::class, 'store']); // Creates playlist
-            Route::delete('/', [PlaylistController::class, 'destroy']); // Deletes playlist
+            Route::post('/', [PlaylistController::class, 'store'])->middleware('throttle:60,1'); // Creates playlist
+            Route::delete('/', [PlaylistController::class, 'destroy'])->middleware('throttle:60,1'); // Deletes playlist
 
             Route::prefix('/tracks')->group(function () {
                 Route::get('/', [PlaylistTrackController::class, 'show']); // Show list of User`s tracks in playlist
-                Route::post('/', [PlaylistTrackController::class, 'store']); // Adds new track to playlist
-                Route::delete('/', [PlaylistTrackController::class, 'destroy']); // Removes one track from playlist
+                Route::post('/', [PlaylistTrackController::class, 'store'])->middleware('throttle:100,1'); // Adds new track to playlist
+                Route::delete('/', [PlaylistTrackController::class, 'destroy'])->middleware('throttle:100,1');; // Removes one track from playlist
             });
 
             Route::prefix('/likes')->group(function () {
@@ -74,8 +74,8 @@ Route::middleware(['auth:api', 'verified'])->group(function () {
 
                 Route::prefix('/tracks')->group(function () {
                     Route::get('/', [LikeTrackController::class, 'index']); // Show list of User`s tracks in likes playlist
-                    Route::post('/', [LikeTrackController::class, 'store']); // Adds new track to likes playlist
-                    Route::delete('/', [LikeTrackController::class, 'destroy']); // Removes one track from likes playlist
+                    Route::post('/', [LikeTrackController::class, 'store'])->middleware('throttle:100,1');; // Adds new track to likes playlist
+                    Route::delete('/', [LikeTrackController::class, 'destroy'])->middleware('throttle:100,1');; // Removes one track from likes playlist
                 });
             });
         });
