@@ -17,9 +17,6 @@ use Dedoc\Scramble\Attributes\Group;
 #[Group('Track')]
 class TrackController extends Controller
 {
-    public const UNIQUE_VIOLATION = '23505';
-    public const INTEGRITY_CONSTRAINT_VIOLATION = '23000';
-
     /**
      * Display list of Tracks
      */
@@ -70,7 +67,6 @@ class TrackController extends Controller
         ]);
 
         $fileName = $request->file('audio')->getClientOriginalName();
-        $fileNameEncoded = rawurlencode($fileName);
         $file = $request->file('audio');
         $fileHash = hash_file('sha256', $file);
         $metadata = GetId3::fromUploadedFile($file);
@@ -82,7 +78,7 @@ class TrackController extends Controller
 
         $instance = $this->storeInDB($metadata, $fileHash, [
             'artwork_filename' => $artwork !== null ? $artworkFileName : null,
-            'audio_filename' => $fileName // $fileNameEncoded
+            'audio_filename' => $fileName
         ]);
         
         $this->upload($instance['id'], $file, $fileName, $artwork, $artworkFileName);

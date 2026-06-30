@@ -32,7 +32,7 @@ class LikeTrackController extends Controller
     public function store(Request $request, Playlist $playlist)
     {
         $request->validate([
-            'track_id' => 'required|string|max:32|alpha_num'
+            'track_id' => 'required|string|max:32|alpha_num|'
         ]);
 
         $trackId = $request->get('track_id');
