@@ -36,7 +36,6 @@ class LoginController extends AuthController
             ], Response::HTTP_UNAUTHORIZED);
         }
 
-        // return $this->respondWithToken($token);
         return $this->respondWithToken($token, [
             'message' => 'Logged in',
         ], Response::HTTP_ACCEPTED)->cookie(

@@ -9,7 +9,7 @@ use App\Http\Controllers\Api\Playlist\LikeController;
 use App\Http\Controllers\Api\Playlist\LikeTrackController;
 use App\Http\Controllers\Api\Auth\ 
 {
-    ConfirmController,
+    VerifyController,
     RegisterController,
     LoginController,
     RefreshController,
@@ -26,7 +26,7 @@ Route::prefix('/auth')->group(function () {
 
     Route::middleware('auth:api')->group(function () {
         Route::post('send-code', SendCodeController::class);
-        Route::post('verify-email', ConfirmController::class); 
+        Route::post('verify-email', VerifyController::class); 
         Route::get('profile', ProfileController::class)->middleware('verified'); // Shows profile of current user
         Route::delete('logout', LogoutController::class)->middleware('verified'); // Logs User out
     });

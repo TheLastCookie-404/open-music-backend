@@ -55,13 +55,6 @@ class RegisterController extends AuthController
             ]
         );
 
-        // $user = User::create([
-        //     'name' => $name,
-        //     'nickname' => $name,
-        //     'email' => strtolower($email),
-        //     'password' => bcrypt($password)
-        // ]);
-
         $credentials = $request->only('email', 'password');
 
         /** @disregard P1013 Undefined method (for attempt()) */
