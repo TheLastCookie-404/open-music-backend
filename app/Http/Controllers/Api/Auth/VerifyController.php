@@ -8,7 +8,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Http\Request;
 use Dedoc\Scramble\Attributes\Group;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Cache;
 
 #[Group('Auth')]
 class VerifyController extends Controller
@@ -16,7 +15,7 @@ class VerifyController extends Controller
     public function __construct(
         protected EmailVerificationService $emailVerificationService
     ) {}
-    
+
     /**
      * Verify user mail
      */

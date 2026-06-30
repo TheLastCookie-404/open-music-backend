@@ -14,12 +14,7 @@ class UserObserver
      */
     public function created(User $user): void
     {
-        // Playlist::create([
-        //     'user_id' => $user->id,
-        //     'name' => 'playlist.likes',
-        //     'description' => 'playlist.likes.description',
-        //     'type' => 'likes'
-        // ]);
+        
     }
 
     /**

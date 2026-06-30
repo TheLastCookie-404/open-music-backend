@@ -30,7 +30,6 @@ class TrackResource extends JsonResource
 
         $isExtended = $request->get('extended');
         $rootUrl = url("storage/track/$this->id");
-        // $audioUrl = "$rootUrl/$this->audio_filename";
         $audioUrl = url("api/file/$this->id");
         $fileNameDecoded = rawurldecode($this->audio_filename);
         $isUserAccessAllowed = Gate::allows('get-track', [Track::class, $this->status]); // Auth with policy (policiy doesnt works without Track::class)
