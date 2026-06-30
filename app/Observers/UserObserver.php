@@ -4,8 +4,6 @@ namespace App\Observers;
 
 use App\Models\User;
 use App\Models\Playlist;
-use ErrorException;
-use Illuminate\Support\Facades\Log;
 
 class UserObserver
 {
@@ -14,7 +12,7 @@ class UserObserver
      */
     public function created(User $user): void
     {
-        
+
     }
 
     /**
