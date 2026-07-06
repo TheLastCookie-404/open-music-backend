@@ -7,15 +7,14 @@ namespace App\Models;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Prunable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
-
-class User extends Authenticatable implements JWTSubject, MustVerifyEmail
+use Illuminate\Notifications\Notifiable;use Laravel\Passport\Contracts\OAuthenticatable;
+use Laravel\Passport\HasApiTokens;
+ 
+class User extends Authenticatable implements OAuthenticatable, MustVerifyEmail
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, HasUlids, Prunable;
+    use HasFactory, HasApiTokens, Notifiable, HasUlids;
     /**
      * The attributes that are mass assignable.
      *
@@ -40,12 +39,6 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
         'remember_token',
         'verification_token'
     ];
-
-    public function prunable()
-    {
-        return static::whereNull('email_verified_at')
-            ->where('created_at', '<', now()->subDay());
-    }
 
     // All uploaded tracks by user
     public function tracks()
