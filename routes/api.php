@@ -15,6 +15,7 @@ use App\Http\Controllers\Api\Auth\
     RefreshController,
     ProfileController,
     LogoutController,
+    PasswordController,
     RoleController,
     SendCodeController,
 };
@@ -28,6 +29,7 @@ Route::prefix('/auth')->group(function () {
         Route::post('send-code', SendCodeController::class)->middleware('throttle:5,1');
         Route::post('verify-email', VerifyController::class)->middleware('throttle:5,1');
         Route::get('profile', ProfileController::class)->middleware('verified'); // Shows profile of current user
+        Route::patch('password', PasswordController::class)->middleware('throttle:5,1');
         Route::delete('logout', LogoutController::class)->middleware(['verified', 'throttle:10,1']); // Logs User out
     });
 });
