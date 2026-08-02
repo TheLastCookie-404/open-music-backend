@@ -1,6 +1,6 @@
 # PHP-FPM is a FastCGI implementation for PHP.
 # Read more here: https://hub.docker.com/_/php
-FROM php:8.5-fpm
+FROM php:8.4-fpm
 
 
 RUN apt-get update
@@ -63,8 +63,17 @@ COPY ./ /var/www/html
 # Copy existing application directory permissions
 COPY --chown=www:www ./ /var/www/html
 
+COPY docker/php/custom.ini /usr/local/etc/php/conf.d/custom.ini
+
 # Change current user to www
 USER www
+
+# Install deps with composer 
+RUN composer install --no-dev --optimize-autoloader 
+
+# CMD ["php-fpm"]
+COPY --chmod=755 docker/app/start.sh /usr/local/bin/start.sh
+CMD ["/usr/local/bin/start.sh"]
 
 # Set port for application
 EXPOSE 8000
