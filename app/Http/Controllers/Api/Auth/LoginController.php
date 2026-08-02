@@ -3,9 +3,7 @@
 namespace App\Http\Controllers\Api\Auth;
 
 use App\Http\Controllers\Api\AuthController;
-use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response;
 use Dedoc\Scramble\Attributes\Group;
 
@@ -38,7 +36,6 @@ class LoginController extends AuthController
             ], Response::HTTP_UNAUTHORIZED);
         }
 
-        // return $this->respondWithToken($token);
         return $this->respondWithToken($token, [
             'message' => 'Logged in',
         ], Response::HTTP_ACCEPTED)->cookie(

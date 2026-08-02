@@ -17,7 +17,7 @@ return new class extends Migration
                 ->foreignUlid('user_id')
                 ->references('id')
                 ->on('users')
-                ->nullOnDelete();
+                ->onDelete('cascade');
             $table->enum('type', ['standart', 'likes'])->default('standart');
             $table->enum('visibility', ['public', 'private', 'friends'])->default('public');
             $table->string('name');

@@ -5,26 +5,38 @@ namespace App\Policies;
 use App\Models\Playlist;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
-use Illuminate\Support\Facades\Log;
 
 class PlaylistPolicy
 {
+
     /**
-     * Determine whether the user can update the model.
+     * Determine whether the user can update the playlist content.
+     */
+    public function updatePlaylistContent(User $user, Playlist $playlist) 
+    {
+        return $user->id === $playlist->user_id;
+    }
+
+    /**
+     * Determine whether the user can update the playlist content. (NOT USED!!!)
      */
     public function updatePlaylist(User $user, Playlist $playlist) 
     {
         $isLikesType = $playlist->type === 'likes';
 
-        return $user->id === $playlist->user_id && !$isLikesType;
+        if ($isLikesType) return Response::deny('Likes playlist info cannot be updated via this endpoint');
+
+        return $user->id === $playlist->user_id;
     }
 
     /**
-     * Determine whether the user can delete the model.
+     * Determine whether the user can delete the playlist.
      */
     public function deletePlaylist(User $user, Playlist $playlist) {
         $isLikesType = $playlist->type === 'likes';
 
-        return $user->id === $playlist->user_id && !$isLikesType;
+        if ($isLikesType) return Response::deny('Likes playlist cannot be deleted');
+
+        return $user->id === $playlist->user_id;
     }
 }

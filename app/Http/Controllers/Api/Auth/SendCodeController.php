@@ -3,42 +3,40 @@
 namespace App\Http\Controllers\Api\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
-use PHPOpenSourceSaver\JWTAuth\Exceptions\JWTException;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Mail;
+use App\Services\EmailVerificationService;
 use Symfony\Component\HttpFoundation\Response;
 use Dedoc\Scramble\Attributes\Group;
+use Illuminate\Http\Request;
 
 #[Group('Auth')]
 class SendCodeController extends Controller
 {
+    // private const MAX_RAND_NUM = 999999;
+
+    public function __construct(
+        protected EmailVerificationService $emailVerificationService
+    ) {}
+
     /**
      * Send verification code
      */
-    public function __invoke()
+    public function __invoke(Request $request)
     {
-        $verificationToken = (string) random_int(100000, 999999);
-
-        $user = auth('api')->user();
-        $userId = $user->id;
-        $email = $user->email;
-
-        // User::whereId($userId)->update([ <-- use this if bug found
-        User::find($userId)->update([
-            'verification_token' => $verificationToken
+        $request->validate([
+            'verification_link_url' => 'nullable|string'
         ]);
 
-        Log::info($user->remember_token);
-        
-        Mail::raw($verificationToken, function ($message) use ($email) {
-            $message
-                ->to($email)
-                ->subject('Laravel');
-        });
+        $verificationUrl = $request->get('verification_link_url');
+
+        $emailVerifyTtl = config('auth.email_verify_ttl');
+
+        $this->emailVerificationService->sendCode($verificationUrl);
 
         return response()->json([
-            'message' => 'Verification code was sent'
+            'message' => 'Verification code was sent',
+            'meta' => [
+                'expires_in' => $emailVerifyTtl
+            ]
         ], Response::HTTP_OK);
     }
 }

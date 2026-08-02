@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\PaginatedRequest;
 use App\Http\Resources\TrackResource;
 use App\Models\Playlist;
+use App\Models\Track;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Symfony\Component\HttpFoundation\Response;
@@ -23,7 +24,9 @@ class PlaylistTrackController extends Controller
 
         $playlistId = $request->get('playlist_id');
 
-        $playlist = auth('api')->user()->playlists()->findOrFail($playlistId);
+        $user = auth('api')->user();
+
+        $playlist = $user->playlists()->findOrFail($playlistId);
         $trackList = $request->paginate($playlist->tracks());
 
         return TrackResource::collection($trackList)->additional([
@@ -43,10 +46,12 @@ class PlaylistTrackController extends Controller
 
         $trackId = $request->get('track_id');
         $playlistId = $request->get('playlist_id');
+        $playlist = $playlist->findOrFail($playlistId);
 
-        Gate::authorize('update-playlist', [$playlist, $playlistId]);
+        Track::findOrFail($trackId);
 
-        $playlist = Playlist::findOrFail($playlistId);
+        Gate::authorize('update-playlist-content', [Playlist::class, $playlist]);
+
         $playlist->addTrack($trackId);
 
         return response()->json([
@@ -66,10 +71,12 @@ class PlaylistTrackController extends Controller
 
         $trackId = $request->get('track_id');
         $playlistId = $request->get('playlist_id');
+        $playlist = $playlist->findOrFail($playlistId);
 
-        Gate::authorize('update-playlist', [$playlist, $playlistId]);
+        $playlist->tracks()->findOrFail($trackId);
 
-        $playlist = Playlist::findOrFail($playlistId);
+        Gate::authorize('update-playlist-content', [Playlist::class, $playlist]);
+
         $playlist->removeTrack($trackId);
 
         return response()->json([

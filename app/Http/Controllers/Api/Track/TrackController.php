@@ -2,14 +2,11 @@
 
 namespace App\Http\Controllers\Api\Track;
 
-use Exception;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PaginatedRequest;
-use App\Http\Resources\TrackCollection;
 use App\Http\Resources\TrackResource;
 use App\Models\Track;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -20,10 +17,6 @@ use Dedoc\Scramble\Attributes\Group;
 #[Group('Track')]
 class TrackController extends Controller
 {
-    public const UNIQUE_VIOLATION = '23505';
-    public const INTEGRITY_CONSTRAINT_VIOLATION = '23000';
-
-
     /**
      * Display list of Tracks
      */
@@ -74,7 +67,6 @@ class TrackController extends Controller
         ]);
 
         $fileName = $request->file('audio')->getClientOriginalName();
-        $fileNameEncoded = rawurlencode($fileName);
         $file = $request->file('audio');
         $fileHash = hash_file('sha256', $file);
         $metadata = GetId3::fromUploadedFile($file);
@@ -84,28 +76,12 @@ class TrackController extends Controller
         // Auth with policy (policiy doesnt works without Track::class)
         Gate::authorize('upload-track', Track::class);
 
-        try {
-
-            $instance = $this->storeInDB($metadata, $fileHash, [
-                'artwork_filename' => $artwork !== null ? $artworkFileName : null,
-                'audio_filename' => $fileName // $fileNameEncoded
-            ]);
-            
-            $this->upload($instance['id'], $file, $fileName, $artwork, $artworkFileName);
-        }
-        catch (Exception $e) {
-            Log::error($e);
-
-            if ($e->getCode() === self::UNIQUE_VIOLATION || $e->getCode() === self::INTEGRITY_CONSTRAINT_VIOLATION) {
-                return response()->json([
-                    'message' => 'Track already exists',
-                ], Response::HTTP_CONFLICT);
-            }
-
-            return response()->json([
-                'message' => 'Track uploading failed',
-            ], Response::HTTP_INTERNAL_SERVER_ERROR);
-        }
+        $instance = $this->storeInDB($metadata, $fileHash, [
+            'artwork_filename' => $artwork !== null ? $artworkFileName : null,
+            'audio_filename' => $fileName
+        ]);
+        
+        $this->upload($instance['id'], $file, $fileName, $artwork, $artworkFileName);
 
         return response()->json([
             'message' => 'Track uploaded',
@@ -123,27 +99,16 @@ class TrackController extends Controller
 
         $id = $request->get('id');
         
-        // $isEntryExists = $track->whereId($id)->exists();
-        $track = $track->find($id) ?? false;
-        $isDirecoryExists = Storage::disk('track')->exists("$id");
+        $track = $track->findOrFail($id);
 
-        Log::info((boolean) $track);
-
-        if ($track || $isDirecoryExists) {
-            // Auth with policy (policiy doesnt works without Track::class)
-            Gate::authorize('delete-track', [Track::class, $track]);
-            
-            $track->delete();
-            Storage::disk('track')->deleteDirectory("$id");
-            Storage::disk('public-track')->deleteDirectory("$id");
-        } else {
-            return response()->json([
-                "message" => "Track does not exist"
-            ], Response::HTTP_NOT_FOUND);
-        }
+        Gate::authorize('delete-track', [Track::class, $track]);
+        
+        $track->delete();
+        Storage::disk('track')->deleteDirectory("$id");
+        Storage::disk('public-track')->deleteDirectory("$id");
 
         return response()->json([
-            "message" => "Track deleted"
+            'message' => 'Track deleted'
         ], Response::HTTP_OK);
     }
 
