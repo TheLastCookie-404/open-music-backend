@@ -30,10 +30,13 @@ class FileAccessController extends Controller
 
         $id = $request->get('id');
 
-        $track = $track->findOrFail($id);
+        // Somewhy findOrFail breaks this logic (tries to return only first filename)
+        $track = $track->whereId($id);
         $trackStatus = $track->value('status');
         $fileName = $track->value('audio_filename');
         $fileName = rawurldecode($fileName);
+
+        Log::info($track->value('audio_filename'));
 
         // Auth with policy (policiy doesnt works without Track::class)
         Gate::authorize('get-track', [Track::class, $trackStatus]);
